@@ -2,4 +2,6 @@
 Progressive Web App for schooling
 
 ## Todo
--[] personal timetable
+- [ ] personal timetable
+- [ ] some buttons
+- [ ] academic calendar
