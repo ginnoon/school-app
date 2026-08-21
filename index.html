@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@
     }
   </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 min-h-screen flex items-center justify-center p-4">
   <main class="w-full max-w-sm bg-white rounded-xl border border-gray-200 p-5 space-y-5 shadow-sm">
     <section class="flex flex-col items-center gap-2 pb-1 border-b border-gray-100">
@@ -239,5 +241,13 @@
       loadMealData(currentDate);
     };
   </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log("서비스 워커 등록"))
+        .catch(err => console.log("등록 실패:", err));
+    }
+  </script>
 </body>
+
 </html>
