@@ -1,0 +1,8 @@
+{
+  "name": "ginnoon's school app",
+  "short_name": "gn school app",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#000000"
+}
