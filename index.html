@@ -96,13 +96,19 @@
       </div>
     </section>
     <section id="view-timetable" class="hidden flex-1 flex-col space-y-3 overflow-hidden pb-2">
-      <div class="flex items-center gap-3 pb-2 border-b border-gray-100 flex-shrink-0">
-        <button onclick="navigate('menu')"
-          class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 text-gray-600 flex items-center justify-center transition-colors text-sm"
-          aria-label="뒤로가기">
-          &#10094;
+      <div class="flex items-center justify-between pb-2 border-b border-gray-100 flex-shrink-0">
+        <div class="flex items-center gap-3">
+          <button onclick="navigate('menu')"
+            class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 text-gray-600 flex items-center justify-center transition-colors text-sm"
+            aria-label="뒤로가기">
+            &#10094;
+          </button>
+          <h1 class="font-bold text-base text-gray-800">주간 시간표</h1>
+        </div>
+        <button onclick="openTimetableImport()"
+          class="text-xs font-semibold bg-blue-50 text-blue-600 px-3 py-1.5 rounded-md border border-blue-100 hover:bg-blue-100 transition-colors shadow-sm">
+          시간표 가져오기
         </button>
-        <h1 class="font-bold text-base text-gray-800">주간 시간표</h1>
       </div>
       <div class="flex-1 overflow-auto hide-scrollbar border border-gray-200 rounded-lg bg-white relative">
         <table class="w-full min-w-[450px] border-collapse text-center text-xs">
@@ -128,165 +134,28 @@
                 금</th>
             </tr>
           </thead>
-          <tbody>
-            <tr class="hover:bg-gray-50/50 transition-colors">
-              <th scope="row"
-                class="bg-gray-50 border-b border-r border-gray-200 py-3 font-medium text-gray-600 sticky left-0 z-10 shadow-[1px_0_0_#e5e7eb]">
-                1</th>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-3)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">논술+미술창작</span><span
-                  class="text-[10px] text-blue-500 block">김혜주</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-1)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">고전
-                  읽기</span><span class="text-[10px] text-blue-500 block">이지현</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-5)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">수학과제
-                  탐구</span><span class="text-[10px] text-blue-500 block">구한나리</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-1)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">고전
-                  읽기</span><span class="text-[10px] text-blue-500 block">이지현</span></td>
-              <td class="border-b border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-5)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">수학과제
-                  탐구</span><span class="text-[10px] text-blue-500 block">허재준</span></td>
-            </tr>
-            <tr class="hover:bg-gray-50/50 transition-colors">
-              <th scope="row"
-                class="bg-gray-50 border-b border-r border-gray-200 py-3 font-medium text-gray-600 sticky left-0 z-10 shadow-[1px_0_0_#e5e7eb]">
-                2</th>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-5)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">물리학
-                  실험</span><span class="text-[10px] text-blue-500 block">최만옥</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-5)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">수학과제
-                  탐구</span><span class="text-[10px] text-blue-500 block">허재준</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-8)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">한국사+체육+진로</span><span
-                  class="text-[10px] text-blue-500 block">이의선</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-5)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">물리학
-                  실험</span><span class="text-[10px] text-blue-500 block">최만옥</span></td>
-              <td class="border-b border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-7)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">심화
-                  영어 독해Ⅰ</span><span class="text-[10px] text-blue-500 block">유종찬</span></td>
-            </tr>
-            <tr class="hover:bg-gray-50/50 transition-colors">
-              <th scope="row"
-                class="bg-gray-50 border-b border-r border-gray-200 py-3 font-medium text-gray-600 sticky left-0 z-10 shadow-[1px_0_0_#e5e7eb]">
-                3</th>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(창융3)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">화학
-                  실험</span><span class="text-[10px] text-blue-500 block">심정애</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-5)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">물리학
-                  실험</span><span class="text-[10px] text-blue-500 block">최만옥</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-7)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">심화
-                  영어 독해Ⅰ</span><span class="text-[10px] text-blue-500 block">유종찬</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-8)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">한국사+체육+진로</span><span
-                  class="text-[10px] text-blue-500 block">이광욱</span></td>
-              <td class="border-b border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-5)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">물리학
-                  실험</span><span class="text-[10px] text-blue-500 block">최만옥</span></td>
-            </tr>
-            <tr class="hover:bg-gray-50/50 transition-colors">
-              <th scope="row"
-                class="bg-gray-50 border-b border-r border-gray-200 py-3 font-medium text-gray-600 sticky left-0 z-10 shadow-[1px_0_0_#e5e7eb]">
-                4</th>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-5)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">수학과제
-                  탐구</span><span class="text-[10px] text-blue-500 block">구한나리</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-8)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">한국사+체육+진로</span><span
-                  class="text-[10px] text-blue-500 block">장치영</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(창융3)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">화학
-                  실험</span><span class="text-[10px] text-blue-500 block">심정애</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-3)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">논술+미술창작</span><span
-                  class="text-[10px] text-blue-500 block">이수정</span></td>
-              <td class="border-b border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-8)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">한국사+체육+진로</span><span
-                  class="text-[10px] text-blue-500 block">이광욱</span></td>
-            </tr>
-            <tr class="hover:bg-gray-50/50 transition-colors">
-              <th scope="row"
-                class="bg-gray-50 border-b border-r border-gray-200 py-3 font-medium text-gray-600 sticky left-0 z-10 shadow-[1px_0_0_#e5e7eb]">
-                5</th>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-1)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">고전
-                  읽기</span><span class="text-[10px] text-blue-500 block">강미경</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-7)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">심화
-                  영어 독해Ⅰ</span><span class="text-[10px] text-blue-500 block">정경인</span></td>
-              <td class="border-b border-r border-gray-200 bg-gray-50/30"></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(창융3)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">화학
-                  실험</span><span class="text-[10px] text-blue-500 block">심정애</span></td>
-              <td class="border-b border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-3)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">논술+미술창작</span><span
-                  class="text-[10px] text-blue-500 block">김혜주</span></td>
-            </tr>
-            <tr class="hover:bg-gray-50/50 transition-colors">
-              <th scope="row"
-                class="bg-gray-50 border-b border-r border-gray-200 py-3 font-medium text-gray-600 sticky left-0 z-10 shadow-[1px_0_0_#e5e7eb]">
-                6</th>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-1)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">고전
-                  읽기</span><span class="text-[10px] text-blue-500 block">강미경</span></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-7)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">심화
-                  영어 독해Ⅰ</span><span class="text-[10px] text-blue-500 block">정경인</span></td>
-              <td class="border-b border-r border-gray-200 bg-gray-50/30"></td>
-              <td class="border-b border-r border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(창융3)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">화학
-                  실험</span><span class="text-[10px] text-blue-500 block">심정애</span></td>
-              <td class="border-b border-gray-200 p-1.5 bg-white"><span
-                  class="text-[10px] text-gray-400 block mb-0.5">(3-3)</span><span
-                  class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">논술+미술창작</span><span
-                  class="text-[10px] text-blue-500 block">김혜주</span></td>
-            </tr>
-            <tr class="hover:bg-gray-50/50 transition-colors">
-              <th scope="row"
-                class="bg-gray-50 border-r border-gray-200 py-3 font-medium text-gray-600 sticky left-0 z-10 shadow-[1px_0_0_#e5e7eb]">
-                7</th>
-              <td class="border-r border-gray-200 bg-gray-50/30"></td>
-              <td class="border-r border-gray-200 bg-gray-50/30"></td>
-              <td class="border-r border-gray-200 bg-gray-50/30"></td>
-              <td class="border-r border-gray-200 bg-gray-50/30"></td>
-              <td class="bg-gray-50/30"></td>
-            </tr>
+          <tbody id="timetable-body">
           </tbody>
         </table>
       </div>
     </section>
+    <div id="import-modal"
+      class="hidden absolute inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl p-5 w-full max-w-sm shadow-2xl flex flex-col">
+        <h2 class="font-bold text-gray-800 mb-1">시간표 가져오기</h2>
+        <p class="text-[11px] text-gray-500 mb-4 leading-relaxed">
+          학교 홈페이지나 나이스(NEIS)에서 표 형태의 시간표를 복사(Ctrl+C)한 후, 아래 영역을 클릭하고 붙여넣기(Ctrl+V) 해주세요.
+        </p>
+        <div id="paste-area" contenteditable="true"
+          class="w-full h-24 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-sm text-gray-400 focus:outline-none focus:border-blue-400 focus:bg-blue-50 focus:text-blue-600 transition-colors overflow-hidden relative break-all p-3 cursor-text">
+          <span class="pointer-events-none text-center">이곳을 클릭하고<br>Ctrl + V (붙여넣기)</span>
+        </div>
+        <div class="flex gap-2 mt-4 pt-3 border-t border-gray-100">
+          <button onclick="closeTimetableImport()"
+            class="flex-1 p-2.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-600 text-sm font-semibold transition-colors">닫기</button>
+        </div>
+      </div>
+    </div>
   </main>
   <footer class="w-full max-w-sm mt-3 flex-shrink-0">
     <a href="https://github.com/ginnoon/school-app" target="_blank" rel="noopener noreferrer"
@@ -319,6 +188,146 @@
     const ALLERGEN_REGEX = /\s*\([\d\.]+\)|\s*[\d\.]+\.?\s*$/g;
     const BR_SPLIT_REGEX = /<br\s*\/?>|\n/gi;
     let DOM = {};
+    let timetableData = JSON.parse(localStorage.getItem('timetableData')) || [];
+    function openTimetableImport() {
+      const modal = document.getElementById('import-modal');
+      const pasteArea = document.getElementById('paste-area');
+      modal.classList.remove('hidden');
+      pasteArea.innerHTML = '<span class="pointer-events-none text-center text-gray-400">이곳을 클릭하고<br><strong class="text-blue-500">Ctrl + V</strong> (붙여넣기)</span>';
+      setTimeout(() => pasteArea.focus(), 50);
+    }
+    function closeTimetableImport() {
+      document.getElementById('import-modal').classList.add('hidden');
+    }
+    function cleanClipboardHtml(html) {
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const source = doc.querySelector("table");
+      if (!source) return "";
+      const allowed = new Set([
+        "TABLE", "THEAD", "TBODY", "TFOOT", "TR", "TH", "TD", "BR", "SPAN"
+      ]);
+      const allowedAttributes = new Set([
+        "colspan", "rowspan", "scope"
+      ]);
+      function clean(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          return document.createTextNode(node.nodeValue);
+        }
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+          return null;
+        }
+        const tag = node.tagName;
+        if (allowed.has(tag)) {
+          const el = document.createElement(tag.toLowerCase());
+          for (const attr of node.attributes) {
+            if (allowedAttributes.has(attr.name.toLowerCase())) {
+              el.setAttribute(attr.name, attr.value);
+            }
+          }
+          for (const child of node.childNodes) {
+            const result = clean(child);
+            if (result) {
+              el.appendChild(result);
+            }
+          }
+          return el;
+        }
+        const fragment = document.createDocumentFragment();
+        for (const child of node.childNodes) {
+          const result = clean(child);
+          if (result) {
+            fragment.appendChild(result);
+          }
+        }
+        return fragment;
+      }
+      const cleaned = clean(source);
+      return cleaned.outerHTML || (cleaned.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? Array.from(cleaned.childNodes).map(n => n.outerHTML || n.nodeValue).join('') : '');
+    }
+    document.getElementById('paste-area').addEventListener('paste', (e) => {
+      e.preventDefault();
+      const html = e.clipboardData.getData('text/html');
+      if (html) {
+        parseTimetableHTML(html);
+      } else {
+        alert("복사된 데이터에 HTML 표 형식이 포함되어 있지 않습니다.\n웹사이트에서 마우스로 표를 직접 드래그해서 복사해주세요.");
+      }
+    });
+    function parseTimetableHTML(htmlString) {
+      const cleanHTML = cleanClipboardHtml(htmlString);
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(cleanHTML || htmlString, 'text/html');
+      const table = doc.querySelector('table');
+      if (!table) {
+        alert("표(Table) 데이터를 인식할 수 없습니다.");
+        return;
+      }
+      const rows = table.querySelectorAll('tbody tr');
+      const newData = [];
+      rows.forEach((row) => {
+        const periodData = [];
+        const cells = Array.from(row.querySelectorAll('td'));
+        for (let i = 0; i < 5; i++) {
+          const cell = cells[i];
+          if (!cell || cell.classList.contains('NOCLASS') || !cell.textContent.trim()) {
+            periodData.push(null);
+            continue;
+          }
+          let tempDiv = document.createElement('div');
+          tempDiv.innerHTML = cell.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+          const spanElem = tempDiv.querySelector('span');
+          let teacher = spanElem ? spanElem.innerText.trim() : '';
+          if (spanElem) spanElem.remove();
+          let rawText = tempDiv.innerText.trim();
+          let lines = rawText.split('\n').map(l => l.trim()).filter(l => l);
+          let room = lines.length > 1 && lines[0].startsWith('(') ? lines[0] : '';
+          let subject = lines.length > 1 ? lines.slice(room ? 1 : 0).join(' ') : lines[0] || '';
+          periodData.push({ room, subject, teacher });
+        }
+        newData.push(periodData);
+      });
+      if (newData.length > 0) {
+        timetableData = newData;
+        localStorage.setItem('timetableData', JSON.stringify(timetableData));
+        renderTimetable();
+        closeTimetableImport();
+      } else {
+        alert("추출된 시간표 데이터가 없습니다.");
+      }
+    }
+    function renderTimetable() {
+      const tbody = document.getElementById('timetable-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (timetableData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-16 text-center bg-gray-50/50"><span class="block text-2xl mb-2 opacity-60">📋</span><span class="text-sm font-medium text-gray-500">등록된 시간표가 없습니다.</span><br><span class="text-xs text-gray-400 mt-1 block">우측 상단의 '시간표 가져오기' 버튼을 클릭하세요.</span></td></tr>`;
+        return;
+      }
+      timetableData.forEach((period, pIdx) => {
+        let tr = document.createElement('tr');
+        tr.className = 'hover:bg-gray-50/50 transition-colors';
+        let th = document.createElement('th');
+        th.scope = 'row';
+        th.className = 'bg-gray-50 border-b border-r border-gray-200 py-3 font-medium text-gray-600 sticky left-0 z-10 shadow-[1px_0_0_#e5e7eb]';
+        th.innerText = pIdx + 1;
+        tr.appendChild(th);
+        period.forEach((cellData) => {
+          let td = document.createElement('td');
+          td.className = 'border-b border-r border-gray-200 p-1.5 bg-white';
+          if (cellData) {
+            td.innerHTML = `
+                            ${cellData.room ? `<span class="text-[10px] text-gray-400 block mb-0.5">${cellData.room}</span>` : ''}
+                            <span class="font-bold text-gray-800 block text-[11px] break-keep leading-tight mb-1">${cellData.subject}</span>
+                            ${cellData.teacher ? `<span class="text-[10px] text-blue-500 block">${cellData.teacher}</span>` : ''}
+                        `;
+          } else {
+            td.className = 'border-b border-r border-gray-200 bg-gray-50/30';
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
     function getYYYYMMDD(date) {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -491,6 +500,7 @@
       };
       updateDateUI();
       loadMealData(currentDate);
+      renderTimetable();
     };
   </script>
   <script>
