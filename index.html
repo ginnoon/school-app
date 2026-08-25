@@ -52,7 +52,7 @@
 <body
   class="h-[100dvh] w-full flex flex-col items-center justify-center p-3 bg-gray-50 text-gray-800 font-sans overflow-hidden">
   <main
-    class="w-full max-w-sm bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col h-[560px] max-h-[calc(100dvh-4.25rem)] relative overflow-hidden">
+    class="w-full max-w-sm flex-1 bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col relative overflow-hidden">
     <section id="view-menu"
       class="flex flex-col h-full absolute inset-0 z-10 bg-white transition-transform duration-300 transform translate-x-0">
       <header class="border-b border-gray-200 p-4 text-center shrink-0">
@@ -82,7 +82,6 @@
         </button>
       </div>
     </section>
-
     <section id="view-meal"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header class="p-4 border-b border-gray-200 bg-white flex items-center gap-3 sticky top-0 z-30 shrink-0">
@@ -124,7 +123,6 @@
         </div>
       </div>
     </section>
-
     <section id="view-timetable"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header
@@ -251,7 +249,6 @@
         <p class="text-xs text-gray-500">우측 상단 가져오기 버튼을 이용해 시간표를 등록할 수 있습니다.</p>
       </div>
     </section>
-
     <section id="view-weather"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header
@@ -273,7 +270,6 @@
       </div>
     </section>
   </main>
-
   <footer class="w-full max-w-sm mx-auto mt-2.5 text-center shrink-0">
     <a href="https://github.com/ginnoon/school-app" target="_blank" rel="noopener noreferrer"
       class="inline-flex items-center justify-center gap-1.5 text-[11px] leading-none text-gray-400 hover:text-gray-600 transition-colors py-1">
@@ -289,10 +285,9 @@
           </clipPath>
         </defs>
       </svg>
-      <span class="inline-block leading-none">Made by ginnoon</span>
+      <span class="inline-block translate-y-[1px]">Made by ginnoon</span>
     </a>
   </footer>
-
   <div id="toast"
     class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform opacity-0 translate-y-4 pointer-events-none">
     <div id="toast-card"
@@ -300,7 +295,6 @@
       <span id="toast-msg"></span>
     </div>
   </div>
-
   <script>
     const CONFIG = {
       NEIS_URL: 'https://open.neis.go.kr/hub/mealServiceDietInfo',
@@ -327,7 +321,6 @@
       ]
     };
     const CLEAN_REGEX = /\s*\(.*?\)\s*|[0-9.]+\s*$/g;
-
     const State = {
       currentDate: new Date(),
       cachedMeals: new Map(),
@@ -335,9 +328,7 @@
       currentLocIndex: 0,
       weatherData: null
     };
-
     const DOM = {};
-
     const UIService = {
       initDOM() {
         DOM.viewMenu = document.getElementById('view-menu');
@@ -378,7 +369,6 @@
         DOM.viewMeal.className = 'flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20';
         DOM.viewTimetable.className = 'flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20';
         DOM.viewWeather.className = 'flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20';
-
         if (viewName === 'menu') {
           DOM.viewMenu.classList.replace('-translate-x-full', 'translate-x-0');
         } else if (viewName === 'meal') {
@@ -390,7 +380,6 @@
         }
       }
     };
-
     const MealService = {
       formatDateStr(dateObj) {
         const y = dateObj.getFullYear();
@@ -444,35 +433,27 @@
         DOM.domN.innerHTML = CONFIG.SKELETON_HTML;
         DOM.domMCal.textContent = '- Kcal';
         DOM.domNCal.textContent = '- Kcal';
-
         if (State.cachedMeals.has(targetDate)) {
           this.displayMeal(State.cachedMeals.get(targetDate));
           return;
         }
-
         if (State.abortController) State.abortController.abort();
         State.abortController = new AbortController();
-
         const prev = new Date(dateObj); prev.setDate(prev.getDate() - 1);
         const next = new Date(dateObj); next.setDate(next.getDate() + 1);
         const fromDate = this.formatDateStr(prev);
         const toDate = this.formatDateStr(next);
-
         const url = `${CONFIG.NEIS_URL}?ATPT_OFCDC_SC_CODE=${CONFIG.ATPT_CODE}&SD_SCHUL_CODE=${CONFIG.SCHUL_CODE}&MLSV_FROM_YMD=${fromDate}&MLSV_TO_YMD=${toDate}&pSize=1000&Type=json`;
-
         try {
           const response = await fetch(url, { signal: State.abortController.signal });
           const jsonData = await response.json();
-
           const defaultEmpty = () => ({
             m: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT },
             n: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT }
           });
-
           State.cachedMeals.set(fromDate, defaultEmpty());
           State.cachedMeals.set(targetDate, defaultEmpty());
           State.cachedMeals.set(toDate, defaultEmpty());
-
           if (jsonData.mealServiceDietInfo && jsonData.mealServiceDietInfo[1]?.row) {
             const rows = jsonData.mealServiceDietInfo[1].row;
             for (let i = 0; i < rows.length; i++) {
@@ -482,7 +463,6 @@
               const dataObj = State.cachedMeals.get(ymd);
               const isLunch = row.MMEAL_SC_CODE === '2' || row.MMEAL_SC_NM.includes('중식');
               const isDinner = row.MMEAL_SC_CODE === '3' || row.MMEAL_SC_NM.includes('석식');
-
               if (isLunch) {
                 dataObj.m.menu = this.cleanMenu(row.DDISH_NM);
                 dataObj.m.cal = this.cleanCalorie(row.CAL_INFO);
@@ -503,7 +483,6 @@
         }
       }
     };
-
     const TimetableService = {
       init() {
         const savedHtml = localStorage.getItem('myTimetable');
@@ -526,7 +505,6 @@
               break;
             }
           }
-
           if (!htmlContent) {
             UIService.showToast('클립보드에서 표(HTML) 데이터를 찾을 수 없습니다.', 'warning');
             return;
@@ -546,31 +524,25 @@
             UIService.showToast("복사된 영역에서 표 구조를 찾지 못했습니다.", "warning");
             return;
           }
-
           const rows = [];
           const bodyRows = [];
           const allRows = Array.from(table.querySelectorAll("tr"));
-
           for (const tr of allRows) {
             const cells = tr.querySelectorAll(":scope > th, :scope > td");
             if (cells.length === 0) continue;
             rows.push(tr);
           }
-
           if (rows.length === 0) {
             UIService.showToast("표 행 데이터를 읽을 수 없습니다.", "warning");
             return;
           }
-
           const firstRow = rows[0];
           const firstCells = Array.from(firstRow.querySelectorAll(":scope > th, :scope > td"));
           const firstHasTh = firstCells.some(cell => cell.tagName.toLowerCase() === "th");
           const startIndex = firstHasTh ? 1 : 0;
-
           for (let i = startIndex; i < rows.length; i++) {
             bodyRows.push(rows[i]);
           }
-
           const tbody = document.createElement("tbody");
           for (const row of bodyRows) {
             const newRow = document.createElement("tr");
@@ -579,20 +551,17 @@
               const oldCell = cells[j];
               const tag = (j === 0) ? "th" : "td";
               const newCell = document.createElement(tag);
-
               if (j === 0) {
                 newCell.setAttribute("scope", "row");
                 newCell.className = "bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10";
               } else {
                 newCell.className = "border-b border-r border-gray-200 p-1.5 bg-white text-gray-800 font-medium text-[11px]";
               }
-
               this.copyCellContent(oldCell, newCell, document);
               newRow.appendChild(newCell);
             }
             tbody.appendChild(newRow);
           }
-
           DOM.timetableBody.innerHTML = tbody.innerHTML;
           localStorage.setItem('myTimetable', tbody.innerHTML);
           UIService.showToast("시간표가 성공적으로 등록되었습니다.", "success");
@@ -626,7 +595,6 @@
         const removeAttributes = ["style", "class", "id", "width", "height", "align", "valign", "bgcolor", "border", "cellpadding", "cellspacing", "color", "face", "size", "dir", "lang", "title", "contenteditable"];
         for (const attr of removeAttributes) element.removeAttribute(attr);
         if (element.tagName.toLowerCase() !== 'th') element.removeAttribute("scope");
-
         const attrs = element.attributes;
         for (let i = attrs.length - 1; i >= 0; i--) {
           const name = attrs[i].name.toLowerCase();
@@ -640,7 +608,6 @@
         for (const child of Array.from(element.children)) this.cleanElement(child);
       }
     };
-
     const WeatherService = {
       init() {
         CONFIG.LOCATIONS.forEach((loc, index) => {
@@ -649,7 +616,6 @@
           option.textContent = loc.name;
           DOM.weatherLocation.appendChild(option);
         });
-
         const savedLocIndex = localStorage.getItem('weatherLocIndex');
         if (savedLocIndex !== null) {
           const parsedIndex = parseInt(savedLocIndex, 10);
@@ -663,7 +629,6 @@
       async fetchWeatherData() {
         const loc = CONFIG.LOCATIONS[State.currentLocIndex];
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&hourly=precipitation_probability&daily=precipitation_probability_max&timezone=Asia%2FSeoul`;
-
         try {
           DOM.menuTodayPrecip.textContent = '...';
           DOM.weatherList.innerHTML = '<div class="text-center text-sm text-gray-500 py-10 animate-pulse">강수 확률 데이터를 불러오는 중...</div>';
@@ -682,7 +647,6 @@
         if (!State.weatherData || !State.weatherData.daily) return;
         const daily = State.weatherData.daily;
         const hourly = State.weatherData.hourly;
-
         const now = new Date();
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -690,8 +654,6 @@
         const hours = String(now.getHours()).padStart(2, '0');
         const todayDateStr = `${year}-${month}-${date}`;
         const currentHourStr = `${todayDateStr}T${hours}:00`;
-
-        // 오늘 현재 시간 이후 남은 시간대의 최대 강수 확률 계산
         let todayPrecip = daily.precipitation_probability_max[0];
         if (hourly && hourly.time && hourly.precipitation_probability) {
           const remainingProbs = [];
@@ -708,30 +670,23 @@
             todayPrecip = Math.max(...remainingProbs);
           }
         }
-
         DOM.menuTodayPrecip.textContent = `${todayPrecip}%`;
-
         let listHtml = '';
         const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
-
         for (let i = 0; i < daily.time.length; i++) {
           const dateStr = daily.time[i];
           const dateObj = new Date(dateStr + 'T00:00:00');
           const dayName = daysOfWeek[dateObj.getDay()];
           const isToday = i === 0;
-
           const precip = isToday ? todayPrecip : daily.precipitation_probability_max[i];
-
           let barColor = 'bg-blue-100';
           let textColor = 'text-gray-700';
-
           if (precip > 50) {
             barColor = 'bg-blue-500';
             textColor = 'text-blue-600';
           } else if (precip > 0) {
             barColor = 'bg-blue-300';
           }
-
           listHtml += `
             <div class="flex items-center gap-4 bg-white border border-gray-100 rounded-lg p-3 shadow-sm">
               <div class="w-14 shrink-0 text-center">
@@ -757,7 +712,6 @@
         this.fetchWeatherData();
       }
     };
-
     window.onload = () => {
       UIService.initDOM();
       WeatherService.init();
