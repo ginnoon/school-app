@@ -76,7 +76,7 @@
             <p class="text-xs text-blue-600/70 mt-0.5">오늘 및 이번 주 비 올 확률 확인</p>
           </div>
           <div class="flex flex-col items-end">
-            <span class="text-[10px] text-blue-500 font-medium mb-0.5">오늘</span>
+            <span id="menu-today-label" class="text-[10px] text-blue-500 font-medium mb-0.5">오늘</span>
             <span id="menu-today-precip" class="text-lg font-bold text-blue-600">- %</span>
           </div>
         </button>
@@ -340,7 +340,7 @@
 
     const UIService = {
       initDOM() {
-        ['view-menu', 'view-meal', 'view-timetable', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'weather-location', 'weather-list'].forEach(id => {
+        ['view-menu', 'view-meal', 'view-timetable', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'menu-today-label', 'weather-location', 'weather-list'].forEach(id => {
           DOM[id.replace(/-([a-z])/g, g => g[1].toUpperCase())] = document.getElementById(id);
         });
         DOM.timetableBody = document.querySelector('#timetable-grid tbody');
@@ -516,6 +516,7 @@
       async fetchWeatherData() {
         const { lat, lon } = CONFIG.LOCATIONS[State.currentLocIndex];
         DOM.menuTodayPrecip.textContent = '...';
+        if (DOM.menuTodayLabel) DOM.menuTodayLabel.textContent = '오늘';
         DOM.weatherList.innerHTML = '<div class="text-center text-sm text-gray-500 py-10 animate-pulse">로딩 중...</div>';
         try {
           const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=precipitation_probability&daily=precipitation_probability_max,weather_code&timezone=Asia%2FSeoul`);
@@ -523,6 +524,7 @@
           this.updateUI();
         } catch {
           DOM.menuTodayPrecip.textContent = '- %';
+          if (DOM.menuTodayLabel) DOM.menuTodayLabel.textContent = '오늘';
           DOM.weatherList.innerHTML = '<div class="text-center text-sm text-rose-500 py-10">날씨 정보를 불러오지 못했습니다.</div>';
         }
       },
@@ -553,6 +555,11 @@
           85: '🌨️', 86: '🌨️',
           95: '🌩️', 96: '⛈️', 99: '⛈️'
         };
+
+        if (DOM.menuTodayLabel) {
+          const todayEmoji = WMO_EMOJI[daily.weather_code[0]] || '☁️';
+          DOM.menuTodayLabel.textContent = `오늘 ${todayEmoji}`;
+        }
 
         DOM.weatherList.innerHTML = daily.time.map((dStr, i) => {
           const d = new Date(dStr + 'T00:00:00');
