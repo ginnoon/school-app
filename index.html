@@ -82,6 +82,7 @@
         </button>
       </div>
     </section>
+
     <section id="view-meal"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header class="p-4 border-b border-gray-200 bg-white flex items-center gap-3 sticky top-0 z-30 shrink-0">
@@ -123,6 +124,7 @@
         </div>
       </div>
     </section>
+
     <section id="view-timetable"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header
@@ -249,6 +251,7 @@
         <p class="text-xs text-gray-500">우측 상단 가져오기 버튼을 이용해 시간표를 등록할 수 있습니다.</p>
       </div>
     </section>
+
     <section id="view-weather"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header
@@ -270,6 +273,7 @@
       </div>
     </section>
   </main>
+
   <footer class="w-full max-w-sm mx-auto mt-2.5 text-center shrink-0">
     <a href="https://github.com/ginnoon/school-app" target="_blank" rel="noopener noreferrer"
       class="inline-flex items-center justify-center gap-1.5 text-[11px] leading-none text-gray-400 hover:text-gray-600 transition-colors py-1">
@@ -288,6 +292,7 @@
       <span class="inline-block translate-y-[1px]">Made by ginnoon</span>
     </a>
   </footer>
+
   <div id="toast"
     class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform opacity-0 translate-y-4 pointer-events-none">
     <div id="toast-card"
@@ -295,6 +300,7 @@
       <span id="toast-msg"></span>
     </div>
   </div>
+
   <script>
     const CONFIG = {
       NEIS_URL: 'https://open.neis.go.kr/hub/mealServiceDietInfo',
@@ -321,403 +327,257 @@
       ]
     };
     const CLEAN_REGEX = /\s*\(.*?\)\s*|[0-9.]+\s*$/g;
+
     const State = {
       currentDate: new Date(),
       cachedMeals: new Map(),
       abortController: null,
-      currentLocIndex: 0,
+      currentLocIndex: parseInt(localStorage.getItem('weatherLocIndex')) || 0,
       weatherData: null
     };
+
     const DOM = {};
+
     const UIService = {
       initDOM() {
-        DOM.viewMenu = document.getElementById('view-menu');
-        DOM.viewMeal = document.getElementById('view-meal');
-        DOM.viewTimetable = document.getElementById('view-timetable');
-        DOM.viewWeather = document.getElementById('view-weather');
-        DOM.domM = document.getElementById('m');
-        DOM.domN = document.getElementById('n');
-        DOM.domMCal = document.getElementById('m-cal');
-        DOM.domNCal = document.getElementById('n-cal');
-        DOM.domDate = document.getElementById('date-display');
-        DOM.toast = document.getElementById('toast');
-        DOM.toastCard = document.getElementById('toast-card');
-        DOM.toastMsg = document.getElementById('toast-msg');
+        ['view-menu', 'view-meal', 'view-timetable', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'weather-location', 'weather-list'].forEach(id => {
+          DOM[id.replace(/-([a-z])/g, g => g[1].toUpperCase())] = document.getElementById(id);
+        });
         DOM.timetableBody = document.querySelector('#timetable-grid tbody');
-        DOM.menuTodayPrecip = document.getElementById('menu-today-precip');
-        DOM.weatherLocation = document.getElementById('weather-location');
-        DOM.weatherList = document.getElementById('weather-list');
       },
       showToast(message, type = 'info') {
         DOM.toastMsg.textContent = message;
         const typeClasses = {
-          success: 'px-4 py-2.5 rounded-lg shadow-lg text-xs font-medium bg-emerald-700 text-white flex items-center gap-2 max-w-xs text-center',
-          error: 'px-4 py-2.5 rounded-lg shadow-lg text-xs font-medium bg-rose-700 text-white flex items-center gap-2 max-w-xs text-center',
-          warning: 'px-4 py-2.5 rounded-lg shadow-lg text-xs font-medium bg-amber-700 text-white flex items-center gap-2 max-w-xs text-center',
-          info: 'px-4 py-2.5 rounded-lg shadow-lg text-xs font-medium bg-gray-800 text-white flex items-center gap-2 max-w-xs text-center'
+          success: 'bg-emerald-700', error: 'bg-rose-700', warning: 'bg-amber-700', info: 'bg-gray-800'
         };
-        DOM.toastCard.className = typeClasses[type] || typeClasses.info;
-        DOM.toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
-        DOM.toast.classList.add('opacity-100', 'translate-y-0');
-        setTimeout(() => {
-          DOM.toast.classList.remove('opacity-100', 'translate-y-0');
-          DOM.toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        DOM.toastCard.className = `px-4 py-2.5 rounded-lg shadow-lg text-xs font-medium text-white flex items-center gap-2 max-w-xs text-center ${typeClasses[type] || typeClasses.info}`;
+        DOM.toast.classList.replace('opacity-0', 'opacity-100');
+        DOM.toast.classList.replace('translate-y-4', 'translate-y-0');
+        DOM.toast.classList.remove('pointer-events-none');
+        clearTimeout(this.toastTimeout);
+        this.toastTimeout = setTimeout(() => {
+          DOM.toast.classList.replace('opacity-100', 'opacity-0');
+          DOM.toast.classList.replace('translate-y-0', 'translate-y-4');
+          DOM.toast.classList.add('pointer-events-none');
         }, 2600);
       },
       navigate(viewName) {
-        DOM.viewMenu.className = 'flex flex-col h-full absolute inset-0 z-10 bg-white transition-transform duration-300 transform -translate-x-full';
-        DOM.viewMeal.className = 'flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20';
-        DOM.viewTimetable.className = 'flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20';
-        DOM.viewWeather.className = 'flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20';
-        if (viewName === 'menu') {
-          DOM.viewMenu.classList.replace('-translate-x-full', 'translate-x-0');
-        } else if (viewName === 'meal') {
-          DOM.viewMeal.classList.replace('translate-x-full', 'translate-x-0');
-        } else if (viewName === 'timetable') {
-          DOM.viewTimetable.classList.replace('translate-x-full', 'translate-x-0');
-        } else if (viewName === 'weather') {
-          DOM.viewWeather.classList.replace('translate-x-full', 'translate-x-0');
+        ['viewMenu', 'viewMeal', 'viewTimetable', 'viewWeather'].forEach(view => {
+          DOM[view].classList.add(view === 'viewMenu' ? '-translate-x-full' : 'translate-x-full');
+          DOM[view].classList.remove('translate-x-0');
+        });
+        const targetView = 'view' + viewName.charAt(0).toUpperCase() + viewName.slice(1);
+        if (DOM[targetView]) {
+          DOM[targetView].classList.replace(targetView === 'viewMenu' ? '-translate-x-full' : 'translate-x-full', 'translate-x-0');
         }
       }
     };
+
     const MealService = {
-      formatDateStr(dateObj) {
-        const y = dateObj.getFullYear();
-        const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const d = String(dateObj.getDate()).padStart(2, '0');
-        return `${y}${m}${d}`;
-      },
+      formatDateStr: (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`,
       renderDate() {
         const days = ['일', '월', '화', '수', '목', '금', '토'];
-        const m = State.currentDate.getMonth() + 1;
-        const d = State.currentDate.getDate();
-        const dayName = days[State.currentDate.getDay()];
-        DOM.domDate.textContent = `${m}.${d} (${dayName})`;
+        DOM.dateDisplay.textContent = `${State.currentDate.getMonth() + 1}.${State.currentDate.getDate()} (${days[State.currentDate.getDay()]})`;
       },
-      changeDate(offset, resetToToday = false) {
-        if (resetToToday) {
-          State.currentDate = new Date();
-        } else {
-          State.currentDate.setDate(State.currentDate.getDate() + offset);
-        }
+      changeDate(offset, reset = false) {
+        State.currentDate = reset ? new Date() : new Date(State.currentDate.setDate(State.currentDate.getDate() + offset));
         this.renderDate();
         this.fetchMealData(State.currentDate);
       },
-      cleanMenu(menuStr) {
-        if (!menuStr) return CONFIG.NO_MEAL_TEXT;
-        return menuStr.split('<br/>')
-          .map(line => line.replace(CLEAN_REGEX, '').trim())
-          .filter(Boolean)
-          .join('<br>') || CONFIG.NO_MEAL_TEXT;
-      },
-      cleanCalorie(calStr) {
-        if (!calStr) return CONFIG.NO_CAL_TEXT;
-        return calStr.trim();
-      },
       displayMeal(data) {
-        if (!data) {
-          DOM.domM.innerHTML = CONFIG.NO_MEAL_TEXT;
-          DOM.domN.innerHTML = CONFIG.NO_MEAL_TEXT;
-          DOM.domMCal.textContent = CONFIG.NO_CAL_TEXT;
-          DOM.domNCal.textContent = CONFIG.NO_CAL_TEXT;
-          return;
-        }
-        DOM.domM.innerHTML = data.m.menu;
-        DOM.domN.innerHTML = data.n.menu;
-        DOM.domMCal.textContent = data.m.cal;
-        DOM.domNCal.textContent = data.n.cal;
+        DOM.m.innerHTML = data ? data.m.menu : CONFIG.NO_MEAL_TEXT;
+        DOM.n.innerHTML = data ? data.n.menu : CONFIG.NO_MEAL_TEXT;
+        DOM.mCal.textContent = data ? data.m.cal : CONFIG.NO_CAL_TEXT;
+        DOM.nCal.textContent = data ? data.n.cal : CONFIG.NO_CAL_TEXT;
       },
       async fetchMealData(dateObj) {
         const targetDate = this.formatDateStr(dateObj);
-        DOM.domM.innerHTML = CONFIG.SKELETON_HTML;
-        DOM.domN.innerHTML = CONFIG.SKELETON_HTML;
-        DOM.domMCal.textContent = '- Kcal';
-        DOM.domNCal.textContent = '- Kcal';
-        if (State.cachedMeals.has(targetDate)) {
-          this.displayMeal(State.cachedMeals.get(targetDate));
-          return;
-        }
+        DOM.m.innerHTML = DOM.n.innerHTML = CONFIG.SKELETON_HTML;
+        DOM.mCal.textContent = DOM.nCal.textContent = '- Kcal';
+
+        if (State.cachedMeals.has(targetDate)) return this.displayMeal(State.cachedMeals.get(targetDate));
+
         if (State.abortController) State.abortController.abort();
         State.abortController = new AbortController();
-        const prev = new Date(dateObj); prev.setDate(prev.getDate() - 1);
-        const next = new Date(dateObj); next.setDate(next.getDate() + 1);
-        const fromDate = this.formatDateStr(prev);
-        const toDate = this.formatDateStr(next);
-        const url = `${CONFIG.NEIS_URL}?ATPT_OFCDC_SC_CODE=${CONFIG.ATPT_CODE}&SD_SCHUL_CODE=${CONFIG.SCHUL_CODE}&MLSV_FROM_YMD=${fromDate}&MLSV_TO_YMD=${toDate}&pSize=1000&Type=json`;
+
+        const fromDate = this.formatDateStr(new Date(dateObj.getTime() - 86400000));
+        const toDate = this.formatDateStr(new Date(dateObj.getTime() + 86400000));
+        const url = `${CONFIG.NEIS_URL}?ATPT_OFCDC_SC_CODE=${CONFIG.ATPT_CODE}&SD_SCHUL_CODE=${CONFIG.SCHUL_CODE}&MLSV_FROM_YMD=${fromDate}&MLSV_TO_YMD=${toDate}&pSize=100&Type=json`;
+
         try {
-          const response = await fetch(url, { signal: State.abortController.signal });
-          const jsonData = await response.json();
-          const defaultEmpty = () => ({
-            m: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT },
-            n: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT }
+          const res = await fetch(url, { signal: State.abortController.signal });
+          const json = await res.json();
+          const defaultEmpty = () => ({ m: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT }, n: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT } });
+
+          [fromDate, targetDate, toDate].forEach(d => { if (!State.cachedMeals.has(d)) State.cachedMeals.set(d, defaultEmpty()); });
+
+          json.mealServiceDietInfo?.[1]?.row?.forEach(row => {
+            const dataObj = State.cachedMeals.get(row.MLSV_YMD);
+            if (!dataObj) return;
+            const menu = row.DDISH_NM.split('<br/>').map(l => l.replace(CLEAN_REGEX, '').trim()).filter(Boolean).join('<br>') || CONFIG.NO_MEAL_TEXT;
+            const cal = row.CAL_INFO.trim() || CONFIG.NO_CAL_TEXT;
+            if (['2', '중식'].some(k => row.MMEAL_SC_CODE === k || row.MMEAL_SC_NM.includes(k))) { dataObj.m = { menu, cal }; }
+            if (['3', '석식'].some(k => row.MMEAL_SC_CODE === k || row.MMEAL_SC_NM.includes(k))) { dataObj.n = { menu, cal }; }
           });
-          State.cachedMeals.set(fromDate, defaultEmpty());
-          State.cachedMeals.set(targetDate, defaultEmpty());
-          State.cachedMeals.set(toDate, defaultEmpty());
-          if (jsonData.mealServiceDietInfo && jsonData.mealServiceDietInfo[1]?.row) {
-            const rows = jsonData.mealServiceDietInfo[1].row;
-            for (let i = 0; i < rows.length; i++) {
-              const row = rows[i];
-              const ymd = row.MLSV_YMD;
-              if (!State.cachedMeals.has(ymd)) continue;
-              const dataObj = State.cachedMeals.get(ymd);
-              const isLunch = row.MMEAL_SC_CODE === '2' || row.MMEAL_SC_NM.includes('중식');
-              const isDinner = row.MMEAL_SC_CODE === '3' || row.MMEAL_SC_NM.includes('석식');
-              if (isLunch) {
-                dataObj.m.menu = this.cleanMenu(row.DDISH_NM);
-                dataObj.m.cal = this.cleanCalorie(row.CAL_INFO);
-              }
-              if (isDinner) {
-                dataObj.n.menu = this.cleanMenu(row.DDISH_NM);
-                dataObj.n.cal = this.cleanCalorie(row.CAL_INFO);
-              }
-            }
-          }
           this.displayMeal(State.cachedMeals.get(targetDate));
-        } catch (error) {
-          if (error.name === 'AbortError') return;
-          DOM.domM.innerHTML = '<span class="text-xs text-rose-500 font-medium">급식 데이터를 불러오지 못했습니다.</span>';
-          DOM.domN.innerHTML = '<span class="text-xs text-rose-500 font-medium">급식 데이터를 불러오지 못했습니다.</span>';
-          DOM.domMCal.textContent = CONFIG.NO_CAL_TEXT;
-          DOM.domNCal.textContent = CONFIG.NO_CAL_TEXT;
+        } catch (e) {
+          if (e.name !== 'AbortError') {
+            const errHtml = '<span class="text-xs text-rose-500 font-medium">데이터를 불러오지 못했습니다.</span>';
+            DOM.m.innerHTML = DOM.n.innerHTML = errHtml;
+          }
         }
       }
     };
+
     const TimetableService = {
       init() {
-        const savedHtml = localStorage.getItem('myTimetable');
-        if (savedHtml) {
-          DOM.timetableBody.innerHTML = savedHtml;
-        }
+        const html = localStorage.getItem('myTimetable');
+        if (html) DOM.timetableBody.innerHTML = html;
       },
       async importFromClipboard() {
         try {
-          if (!navigator.clipboard || !navigator.clipboard.read) {
-            UIService.showToast('클립보드 API를 지원하지 않는 브라우저 환경입니다.', 'error');
-            return;
-          }
-          const clipboardItems = await navigator.clipboard.read();
-          let htmlContent = '';
-          for (const item of clipboardItems) {
+          if (!navigator.clipboard?.read) throw new Error('Not supported');
+          const items = await navigator.clipboard.read();
+          for (const item of items) {
             if (item.types.includes('text/html')) {
-              const blob = await item.getType('text/html');
-              htmlContent = await blob.text();
-              break;
+              this.processPastedHTML(await (await item.getType('text/html')).text());
+              return;
             }
           }
-          if (!htmlContent) {
-            UIService.showToast('클립보드에서 표(HTML) 데이터를 찾을 수 없습니다.', 'warning');
-            return;
-          }
-          this.processPastedHTML(htmlContent);
-        } catch (error) {
-          console.error("클립보드 접근 오류:", error);
-          UIService.showToast('클립보드 접근 권한이 없거나 읽기에 실패했습니다.', 'error');
+          UIService.showToast('복사된 표(HTML) 데이터가 없습니다.', 'warning');
+        } catch (e) {
+          UIService.showToast('클립보드 접근에 실패했습니다.', 'error');
         }
       },
       processPastedHTML(html) {
-        try {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, "text/html");
-          const table = doc.querySelector("table");
-          if (!table) {
-            UIService.showToast("복사된 영역에서 표 구조를 찾지 못했습니다.", "warning");
-            return;
-          }
-          const rows = [];
-          const bodyRows = [];
-          const allRows = Array.from(table.querySelectorAll("tr"));
-          for (const tr of allRows) {
-            const cells = tr.querySelectorAll(":scope > th, :scope > td");
-            if (cells.length === 0) continue;
-            rows.push(tr);
-          }
-          if (rows.length === 0) {
-            UIService.showToast("표 행 데이터를 읽을 수 없습니다.", "warning");
-            return;
-          }
-          const firstRow = rows[0];
-          const firstCells = Array.from(firstRow.querySelectorAll(":scope > th, :scope > td"));
-          const firstHasTh = firstCells.some(cell => cell.tagName.toLowerCase() === "th");
-          const startIndex = firstHasTh ? 1 : 0;
-          for (let i = startIndex; i < rows.length; i++) {
-            bodyRows.push(rows[i]);
-          }
-          const tbody = document.createElement("tbody");
-          for (const row of bodyRows) {
-            const newRow = document.createElement("tr");
-            const cells = Array.from(row.querySelectorAll(":scope > th, :scope > td"));
-            for (let j = 0; j < Math.min(cells.length, 6); j++) {
-              const oldCell = cells[j];
-              const tag = (j === 0) ? "th" : "td";
-              const newCell = document.createElement(tag);
-              if (j === 0) {
-                newCell.setAttribute("scope", "row");
-                newCell.className = "bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10";
-              } else {
-                newCell.className = "border-b border-r border-gray-200 p-1.5 bg-white text-gray-800 font-medium text-[11px]";
-              }
-              this.copyCellContent(oldCell, newCell, document);
-              newRow.appendChild(newCell);
+        const table = new DOMParser().parseFromString(html, "text/html").querySelector("table");
+        if (!table) return UIService.showToast("표 구조를 찾지 못했습니다.", "warning");
+
+        const rows = Array.from(table.querySelectorAll("tr")).filter(tr => tr.querySelector("th, td"));
+        if (!rows.length) return;
+
+        const startIndex = rows[0].querySelector("th") ? 1 : 0;
+        const tbody = document.createElement("tbody");
+
+        rows.slice(startIndex).forEach(row => {
+          const newRow = document.createElement("tr");
+          Array.from(row.querySelectorAll("th, td")).slice(0, 6).forEach((cell, j) => {
+            const isHead = j === 0;
+            const newCell = document.createElement(isHead ? "th" : "td");
+            newCell.className = isHead
+              ? "bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10"
+              : "border-b border-r border-gray-200 p-1.5 bg-white text-gray-800 font-medium text-[11px]";
+            if (isHead) newCell.setAttribute("scope", "row");
+
+            this.copyCellContent(cell, newCell);
+            newRow.appendChild(newCell);
+          });
+          tbody.appendChild(newRow);
+        });
+
+        DOM.timetableBody.innerHTML = tbody.innerHTML;
+        localStorage.setItem('myTimetable', tbody.innerHTML);
+        UIService.showToast("시간표가 등록되었습니다.", "success");
+      },
+      copyCellContent(source, target) {
+        Array.from(source.childNodes).forEach(child => {
+          if (child.nodeType === Node.TEXT_NODE) target.appendChild(document.createTextNode(child.nodeValue));
+          else if (child.nodeType === Node.ELEMENT_NODE) {
+            const tag = child.tagName.toLowerCase();
+            if (new Set(["br", "span", "b", "strong", "i", "em"]).has(tag)) {
+              const newEl = document.createElement(tag);
+              Array.from(child.childNodes).forEach(n => newEl.appendChild(n.cloneNode(true)));
+              target.appendChild(newEl);
+            } else {
+              Array.from(child.childNodes).forEach(n => target.appendChild(n.cloneNode(true)));
             }
-            tbody.appendChild(newRow);
           }
-          DOM.timetableBody.innerHTML = tbody.innerHTML;
-          localStorage.setItem('myTimetable', tbody.innerHTML);
-          UIService.showToast("시간표가 성공적으로 등록되었습니다.", "success");
-        } catch (error) {
-          console.error("HTML 처리 오류:", error);
-          UIService.showToast("시간표 데이터 처리 중 오류가 발생했습니다.", "error");
-        }
+        });
+        // 최상위 target(td, th)의 속성은 삭제하지 않도록 isRoot=true 전달
+        this.cleanElement(target, true);
       },
-      copyCellContent(source, target, doc) {
-        for (const child of Array.from(source.childNodes)) {
-          if (child.nodeType === Node.TEXT_NODE) {
-            target.appendChild(doc.createTextNode(child.nodeValue));
-            continue;
+      cleanElement(element, isRoot = false) {
+        if (!isRoot) {
+          const attrs = element.attributes;
+          for (let i = attrs.length - 1; i >= 0; i--) {
+            element.removeAttribute(attrs[i].name);
           }
-          if (child.nodeType !== Node.ELEMENT_NODE) continue;
-          const tag = child.tagName.toLowerCase();
-          const allowedTags = new Set(["br", "span", "b", "strong", "i", "em", "u", "small", "sub", "sup"]);
-          if (!allowedTags.has(tag)) {
-            const fragment = doc.createDocumentFragment();
-            for (const node of Array.from(child.childNodes)) fragment.appendChild(node.cloneNode(true));
-            target.appendChild(fragment);
-            continue;
-          }
-          const newElement = doc.createElement(tag);
-          for (const node of Array.from(child.childNodes)) newElement.appendChild(node.cloneNode(true));
-          target.appendChild(newElement);
+          if (element.tagName.toLowerCase() === 'span') element.className = 'tch';
         }
-        this.cleanElement(target);
-      },
-      cleanElement(element) {
-        const removeAttributes = ["style", "class", "id", "width", "height", "align", "valign", "bgcolor", "border", "cellpadding", "cellspacing", "color", "face", "size", "dir", "lang", "title", "contenteditable"];
-        for (const attr of removeAttributes) element.removeAttribute(attr);
-        if (element.tagName.toLowerCase() !== 'th') element.removeAttribute("scope");
-        const attrs = element.attributes;
-        for (let i = attrs.length - 1; i >= 0; i--) {
-          const name = attrs[i].name.toLowerCase();
-          if (name.startsWith("on") || name.startsWith("data-") || name.startsWith("aria-")) {
-            element.removeAttribute(name);
-          }
-        }
-        if (element.tagName.toLowerCase() === 'span') {
-          element.classList.add('tch');
-        }
-        for (const child of Array.from(element.children)) this.cleanElement(child);
+        Array.from(element.children).forEach(c => this.cleanElement(c, false));
       }
     };
+
     const WeatherService = {
       init() {
-        CONFIG.LOCATIONS.forEach((loc, index) => {
-          const option = document.createElement('option');
-          option.value = index;
-          option.textContent = loc.name;
-          DOM.weatherLocation.appendChild(option);
-        });
-        const savedLocIndex = localStorage.getItem('weatherLocIndex');
-        if (savedLocIndex !== null) {
-          const parsedIndex = parseInt(savedLocIndex, 10);
-          if (!isNaN(parsedIndex) && parsedIndex >= 0 && parsedIndex < CONFIG.LOCATIONS.length) {
-            State.currentLocIndex = parsedIndex;
-            DOM.weatherLocation.value = parsedIndex;
-          }
-        }
+        CONFIG.LOCATIONS.forEach((loc, i) => DOM.weatherLocation.add(new Option(loc.name, i)));
+        DOM.weatherLocation.value = State.currentLocIndex;
         this.fetchWeatherData();
       },
       async fetchWeatherData() {
-        const loc = CONFIG.LOCATIONS[State.currentLocIndex];
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&hourly=precipitation_probability&daily=precipitation_probability_max&timezone=Asia%2FSeoul`;
+        const { lat, lon } = CONFIG.LOCATIONS[State.currentLocIndex];
+        DOM.menuTodayPrecip.textContent = '...';
+        DOM.weatherList.innerHTML = '<div class="text-center text-sm text-gray-500 py-10 animate-pulse">로딩 중...</div>';
         try {
-          DOM.menuTodayPrecip.textContent = '...';
-          DOM.weatherList.innerHTML = '<div class="text-center text-sm text-gray-500 py-10 animate-pulse">강수 확률 데이터를 불러오는 중...</div>';
-          const response = await fetch(url);
-          if (!response.ok) throw new Error('API request failed');
-          const data = await response.json();
-          State.weatherData = data;
+          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=precipitation_probability&daily=precipitation_probability_max&timezone=Asia%2FSeoul`);
+          State.weatherData = await res.json();
           this.updateUI();
-        } catch (error) {
-          console.error("Open-Meteo API Error:", error);
+        } catch {
           DOM.menuTodayPrecip.textContent = '- %';
           DOM.weatherList.innerHTML = '<div class="text-center text-sm text-rose-500 py-10">날씨 정보를 불러오지 못했습니다.</div>';
         }
       },
       updateUI() {
-        if (!State.weatherData || !State.weatherData.daily) return;
-        const daily = State.weatherData.daily;
-        const hourly = State.weatherData.hourly;
+        const { daily, hourly } = State.weatherData || {};
+        if (!daily) return;
+
         const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const date = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const todayDateStr = `${year}-${month}-${date}`;
-        const currentHourStr = `${todayDateStr}T${hours}:00`;
+        const currentHourStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:00`;
+
         let todayPrecip = daily.precipitation_probability_max[0];
-        if (hourly && hourly.time && hourly.precipitation_probability) {
-          const remainingProbs = [];
-          for (let i = 0; i < hourly.time.length; i++) {
-            const hTime = hourly.time[i];
-            if (hTime.startsWith(todayDateStr) && hTime >= currentHourStr) {
-              const prob = hourly.precipitation_probability[i];
-              if (prob !== null && prob !== undefined) {
-                remainingProbs.push(prob);
-              }
-            }
-          }
-          if (remainingProbs.length > 0) {
-            todayPrecip = Math.max(...remainingProbs);
-          }
+        if (hourly?.time) {
+          const remaining = hourly.precipitation_probability.filter((p, i) => hourly.time[i] >= currentHourStr && hourly.time[i].startsWith(currentHourStr.split('T')[0]));
+          if (remaining.length) todayPrecip = Math.max(...remaining);
         }
+
         DOM.menuTodayPrecip.textContent = `${todayPrecip}%`;
-        let listHtml = '';
-        const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
-        for (let i = 0; i < daily.time.length; i++) {
-          const dateStr = daily.time[i];
-          const dateObj = new Date(dateStr + 'T00:00:00');
-          const dayName = daysOfWeek[dateObj.getDay()];
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+
+        DOM.weatherList.innerHTML = daily.time.map((dStr, i) => {
+          const d = new Date(dStr + 'T00:00:00');
           const isToday = i === 0;
-          const precip = isToday ? todayPrecip : daily.precipitation_probability_max[i];
-          let barColor = 'bg-blue-100';
-          let textColor = 'text-gray-700';
-          if (precip > 50) {
-            barColor = 'bg-blue-500';
-            textColor = 'text-blue-600';
-          } else if (precip > 0) {
-            barColor = 'bg-blue-300';
-          }
-          listHtml += `
+          const p = isToday ? todayPrecip : daily.precipitation_probability_max[i];
+          const color = p > 50 ? 'bg-blue-500' : p > 0 ? 'bg-blue-300' : 'bg-blue-100';
+          const text = p > 50 ? 'text-blue-600' : 'text-gray-700';
+
+          return `
             <div class="flex items-center gap-4 bg-white border border-gray-100 rounded-lg p-3 shadow-sm">
               <div class="w-14 shrink-0 text-center">
-                <div class="text-[11px] text-gray-500 font-medium">${dateObj.getMonth() + 1}.${dateObj.getDate()}</div>
-                <div class="text-sm font-bold ${isToday ? 'text-blue-600' : 'text-gray-800'}">${isToday ? '오늘' : dayName}</div>
+                <div class="text-[11px] text-gray-500 font-medium">${d.getMonth() + 1}.${d.getDate()}</div>
+                <div class="text-sm font-bold ${isToday ? 'text-blue-600' : 'text-gray-800'}">${isToday ? '오늘' : days[d.getDay()]}</div>
               </div>
               <div class="flex-1">
                 <div class="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
-                  <div class="h-full ${barColor} rounded-full transition-all duration-1000 ease-out" style="width: ${precip}%"></div>
+                  <div class="h-full ${color} rounded-full" style="width: ${p}%"></div>
                 </div>
               </div>
-              <div class="w-12 shrink-0 text-right">
-                <span class="text-base font-bold ${textColor}">${precip}%</span>
-              </div>
+              <div class="w-12 shrink-0 text-right"><span class="text-base font-bold ${text}">${p}%</span></div>
             </div>
           `;
-        }
-        DOM.weatherList.innerHTML = listHtml;
+        }).join('');
       },
       changeLocation() {
-        State.currentLocIndex = parseInt(DOM.weatherLocation.value, 10);
+        State.currentLocIndex = DOM.weatherLocation.value;
         localStorage.setItem('weatherLocIndex', State.currentLocIndex);
         this.fetchWeatherData();
       }
     };
+
     window.onload = () => {
       UIService.initDOM();
       WeatherService.init();
       TimetableService.init();
-      MealService.renderDate();
-      MealService.fetchMealData(State.currentDate);
+      MealService.changeDate(0, true);
     };
   </script>
   <script>
