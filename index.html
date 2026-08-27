@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ginnoon's school app</title>
+  <title>학교생활 앱</title>
   <link rel="icon" type="image/png" href="icon-32.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -55,8 +55,15 @@
     class="w-full max-w-sm flex-1 bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col relative overflow-hidden">
     <section id="view-menu"
       class="flex flex-col h-full absolute inset-0 z-10 bg-white transition-transform duration-300 transform translate-x-0">
-      <header class="border-b border-gray-200 p-4 text-center shrink-0">
-        <h1 class="text-lg font-bold text-gray-800">우리학교</h1>
+      <header class="border-b border-gray-200 p-3 px-4 flex items-center justify-between shrink-0 bg-white">
+        <div class="overflow-hidden pr-2">
+          <h1 id="menu-school-name" class="text-base font-bold text-gray-800 truncate">학교</h1>
+          <p id="menu-school-region" class="text-[10px] text-gray-400 font-normal truncate">학교를 검색하여 설정하세요</p>
+        </div>
+        <button onclick="SchoolService.toggleModal(true)"
+          class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors shrink-0">
+          학교 변경
+        </button>
       </header>
       <div class="p-5 flex-1 flex flex-col gap-3 overflow-y-auto hide-scrollbar">
         <button onclick="UIService.navigate('meal')"
@@ -82,7 +89,6 @@
         </button>
       </div>
     </section>
-
     <section id="view-meal"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header class="p-4 border-b border-gray-200 bg-white flex items-center gap-3 sticky top-0 z-30 shrink-0">
@@ -90,7 +96,7 @@
           class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
           &lt;
         </button>
-        <h1 class="text-base font-bold text-gray-800">급식표</h1>
+        <h1 id="meal-header-title" class="text-base font-bold text-gray-800">급식표</h1>
       </header>
       <div class="p-5 flex-1 space-y-4">
         <div class="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
@@ -124,7 +130,6 @@
         </div>
       </div>
     </section>
-
     <section id="view-timetable"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header
@@ -251,7 +256,6 @@
         <p class="text-xs text-gray-500">우측 상단 가져오기 버튼을 이용해 시간표를 등록할 수 있습니다.</p>
       </div>
     </section>
-
     <section id="view-weather"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header
@@ -272,8 +276,24 @@
         </div>
       </div>
     </section>
+    <div id="modal-school" class="flex flex-col h-full absolute inset-0 bg-white translate-y-full z-40">
+      <header class="p-4 border-b border-gray-200 flex items-center justify-between shrink-0 bg-white">
+        <h2 class="text-base font-bold text-gray-800">학교 검색</h2>
+        <button onclick="SchoolService.toggleModal(false)"
+          class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-500 font-bold transition-colors">&times;</button>
+      </header>
+      <div class="p-4 border-b border-gray-100 flex gap-2 shrink-0 bg-gray-50/50">
+        <input type="text" id="school-search-input" placeholder="학교 이름 입력 (예: 충렬고)"
+          onkeydown="if(event.key==='Enter') SchoolService.search()"
+          class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button onclick="SchoolService.search()"
+          class="px-3.5 py-2 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition-colors shrink-0">검색</button>
+      </div>
+      <div id="school-search-results" class="p-4 flex-1 overflow-y-auto hide-scrollbar space-y-2">
+        <p class="text-xs text-gray-400 text-center py-10">학교 이름을 입력 후 검색 버튼 또는 엔터 키를 누르세요.</p>
+      </div>
+    </div>
   </main>
-
   <footer class="w-full max-w-sm mx-auto mt-2.5 text-center shrink-0">
     <a href="https://github.com/ginnoon/school-app" target="_blank" rel="noopener noreferrer"
       class="inline-flex items-center justify-center gap-1.5 text-[11px] leading-none text-gray-400 hover:text-gray-600 transition-colors py-1">
@@ -292,7 +312,6 @@
       <span class="inline-block translate-y-[1px]">Made by ginnoon</span>
     </a>
   </footer>
-
   <div id="toast"
     class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform opacity-0 translate-y-4 pointer-events-none">
     <div id="toast-card"
@@ -300,12 +319,9 @@
       <span id="toast-msg"></span>
     </div>
   </div>
-
   <script>
     const CONFIG = {
       NEIS_URL: 'https://open.neis.go.kr/hub/mealServiceDietInfo',
-      ATPT_CODE: 'C10',
-      SCHUL_CODE: '7150118',
       NO_MEAL_TEXT: '<span class="text-xs text-gray-400">급식 정보가 없습니다.</span>',
       NO_CAL_TEXT: '- Kcal',
       SKELETON_HTML: `
@@ -327,20 +343,18 @@
       ]
     };
     const CLEAN_REGEX = /\s*\(.*?\)\s*|[0-9.]+\s*$/g;
-
     const State = {
       currentDate: new Date(),
       cachedMeals: new Map(),
       abortController: null,
       currentLocIndex: parseInt(localStorage.getItem('weatherLocIndex')) || 0,
-      weatherData: null
+      weatherData: null,
+      school: JSON.parse(localStorage.getItem('mySchool')) || null
     };
-
     const DOM = {};
-
     const UIService = {
       initDOM() {
-        ['view-menu', 'view-meal', 'view-timetable', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'menu-today-label', 'weather-location', 'weather-list'].forEach(id => {
+        ['view-menu', 'view-meal', 'view-timetable', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'menu-today-label', 'weather-location', 'weather-list', 'menu-school-name', 'menu-school-region', 'modal-school', 'school-search-input', 'school-search-results', 'meal-header-title'].forEach(id => {
           DOM[id.replace(/-([a-z])/g, g => g[1].toUpperCase())] = document.getElementById(id);
         });
         DOM.timetableBody = document.querySelector('#timetable-grid tbody');
@@ -372,7 +386,55 @@
         }
       }
     };
-
+    const SchoolService = {
+      toggleModal(show) {
+        DOM.modalSchool.classList.toggle('translate-y-full', !show);
+        DOM.modalSchool.classList.toggle('translate-y-0', show);
+        if (show) DOM.schoolSearchInput.focus();
+      },
+      async search() {
+        const keyword = DOM.schoolSearchInput.value.trim();
+        if (!keyword) return UIService.showToast('학교 이름을 입력해주세요.', 'warning');
+        DOM.schoolSearchResults.innerHTML = '<div class="text-center text-xs text-gray-400 py-10 animate-pulse">검색 중...</div>';
+        try {
+          const res = await fetch(`https://open.neis.go.kr/hub/schoolInfo?Type=json&pIndex=1&pSize=20&SCHUL_NM=${encodeURIComponent(keyword)}`);
+          const json = await res.json();
+          const rows = json.schoolInfo?.[1]?.row;
+          if (!rows || !rows.length) {
+            DOM.schoolSearchResults.innerHTML = '<p class="text-xs text-gray-400 text-center py-10">검색 결과가 없습니다.</p>';
+            return;
+          }
+          DOM.schoolSearchResults.innerHTML = rows.map(r => {
+            const schulNm = r.SCHUL_NM.replace(/'/g, "\\'");
+            const region = (r.ORG_RDNMA || r.LCTN_SC_NM || r.ATPT_OFCDC_SC_NM || '').replace(/'/g, "\\'");
+            return `
+              <button onclick="SchoolService.select('${r.ATPT_OFCDC_SC_CODE}', '${r.SD_SCHUL_CODE}', '${schulNm}', '${region}')"
+                class="w-full text-left p-3 rounded-lg border border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 transition-colors">
+                <div class="font-bold text-xs text-gray-800">${r.SCHUL_NM}</div>
+                <div class="text-[10px] text-gray-500 mt-0.5">${r.ORG_RDNMA || r.LCTN_SC_NM || r.ATPT_OFCDC_SC_NM}</div>
+              </button>
+            `;
+          }).join('');
+        } catch (e) {
+          DOM.schoolSearchResults.innerHTML = '<p class="text-xs text-rose-500 text-center py-10">학교 정보를 불러오지 못했습니다.</p>';
+        }
+      },
+      select(atptCode, schulCode, schulNm, orgRdnma) {
+        State.school = { atptCode, schulCode, schulNm, orgRdnma };
+        localStorage.setItem('mySchool', JSON.stringify(State.school));
+        State.cachedMeals.clear();
+        this.updateUI();
+        this.toggleModal(false);
+        UIService.showToast(`${schulNm}로 설정되었습니다.`, 'success');
+        MealService.fetchMealData(State.currentDate);
+      },
+      updateUI() {
+        if (!State.school) return;
+        if (DOM.menuSchoolName) DOM.menuSchoolName.textContent = State.school.schulNm;
+        if (DOM.menuSchoolRegion) DOM.menuSchoolRegion.textContent = State.school.orgRdnma || '선택된 학교';
+        if (DOM.mealHeaderTitle) DOM.mealHeaderTitle.textContent = `${State.school.schulNm} 급식표`;
+      }
+    };
     const MealService = {
       formatDateStr: (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`,
       renderDate() {
@@ -394,23 +456,21 @@
         const targetDate = this.formatDateStr(dateObj);
         DOM.m.innerHTML = DOM.n.innerHTML = CONFIG.SKELETON_HTML;
         DOM.mCal.textContent = DOM.nCal.textContent = '- Kcal';
-
+        if (!State.school) {
+          const errHtml = '<span class="text-xs text-rose-500 font-medium">학교가 설정되지 않았습니다.</span>';
+          DOM.m.innerHTML = DOM.n.innerHTML = errHtml;
+        }
         if (State.cachedMeals.has(targetDate)) return this.displayMeal(State.cachedMeals.get(targetDate));
-
         if (State.abortController) State.abortController.abort();
         State.abortController = new AbortController();
-
         const fromDate = this.formatDateStr(new Date(dateObj.getTime() - 86400000));
         const toDate = this.formatDateStr(new Date(dateObj.getTime() + 86400000));
-        const url = `${CONFIG.NEIS_URL}?ATPT_OFCDC_SC_CODE=${CONFIG.ATPT_CODE}&SD_SCHUL_CODE=${CONFIG.SCHUL_CODE}&MLSV_FROM_YMD=${fromDate}&MLSV_TO_YMD=${toDate}&pSize=100&Type=json`;
-
+        const url = `${CONFIG.NEIS_URL}?ATPT_OFCDC_SC_CODE=${State.school.atptCode}&SD_SCHUL_CODE=${State.school.schulCode}&MLSV_FROM_YMD=${fromDate}&MLSV_TO_YMD=${toDate}&pSize=100&Type=json`;
         try {
           const res = await fetch(url, { signal: State.abortController.signal });
           const json = await res.json();
           const defaultEmpty = () => ({ m: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT }, n: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT } });
-
           [fromDate, targetDate, toDate].forEach(d => { if (!State.cachedMeals.has(d)) State.cachedMeals.set(d, defaultEmpty()); });
-
           json.mealServiceDietInfo?.[1]?.row?.forEach(row => {
             const dataObj = State.cachedMeals.get(row.MLSV_YMD);
             if (!dataObj) return;
@@ -428,7 +488,6 @@
         }
       }
     };
-
     const TimetableService = {
       init() {
         const html = localStorage.getItem('myTimetable');
@@ -452,13 +511,10 @@
       processPastedHTML(html) {
         const table = new DOMParser().parseFromString(html, "text/html").querySelector("table");
         if (!table) return UIService.showToast("표 구조를 찾지 못했습니다.", "warning");
-
         const rows = Array.from(table.querySelectorAll("tr")).filter(tr => tr.querySelector("th, td"));
         if (!rows.length) return;
-
         const startIndex = rows[0].querySelector("th") ? 1 : 0;
         const tbody = document.createElement("tbody");
-
         rows.slice(startIndex).forEach(row => {
           const newRow = document.createElement("tr");
           Array.from(row.querySelectorAll("th, td")).slice(0, 6).forEach((cell, j) => {
@@ -468,13 +524,11 @@
               ? "bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10"
               : "border-b border-r border-gray-200 p-1.5 bg-white text-gray-800 font-medium text-[11px]";
             if (isHead) newCell.setAttribute("scope", "row");
-
             this.copyCellContent(cell, newCell);
             newRow.appendChild(newCell);
           });
           tbody.appendChild(newRow);
         });
-
         DOM.timetableBody.innerHTML = tbody.innerHTML;
         localStorage.setItem('myTimetable', tbody.innerHTML);
         UIService.showToast("시간표가 등록되었습니다.", "success");
@@ -493,7 +547,6 @@
             }
           }
         });
-        // 최상위 target(td, th)의 속성은 삭제하지 않도록 isRoot=true 전달
         this.cleanElement(target, true);
       },
       cleanElement(element, isRoot = false) {
@@ -531,19 +584,15 @@
       updateUI() {
         const { daily, hourly } = State.weatherData || {};
         if (!daily) return;
-
         const now = new Date();
         const currentHourStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:00`;
-
         let todayPrecip = daily.precipitation_probability_max[0];
         if (hourly?.time) {
           const remaining = hourly.precipitation_probability.filter((p, i) => hourly.time[i] >= currentHourStr && hourly.time[i].startsWith(currentHourStr.split('T')[0]));
           if (remaining.length) todayPrecip = Math.max(...remaining);
         }
-
         DOM.menuTodayPrecip.textContent = `${todayPrecip}%`;
         const days = ['일', '월', '화', '수', '목', '금', '토'];
-
         const WMO_GOOGLE_ICON = {
           0: 'sunny', 1: 'mostly_sunny', 2: 'partly_cloudy', 3: 'cloudy',
           45: 'cloudy', 48: 'cloudy',
@@ -556,17 +605,14 @@
           85: 'snow_showers', 86: 'heavy_snow',
           95: 'isolated_tstorms', 96: 'strong_tstorms', 99: 'strong_tstorms'
         };
-
         const getIconUrl = (code) => {
           const condition = WMO_GOOGLE_ICON[code] || 'cloudy';
           return `https://maps.gstatic.com/weather/v1/${condition}.svg`;
         };
-
         if (DOM.menuTodayLabel) {
           const todayIconUrl = getIconUrl(daily.weather_code[0]);
           DOM.menuTodayLabel.innerHTML = `오늘 <img src="${todayIconUrl}" class="inline-block w-4 h-4 ml-1 align-middle drop-shadow-[0_1px_2px_rgba(102,115,139,.75)]" alt="오늘 날씨">`;
         }
-
         DOM.weatherList.innerHTML = daily.time.map((dStr, i) => {
           const d = new Date(dStr + 'T00:00:00');
           const isToday = i === 0;
@@ -574,7 +620,6 @@
           const color = p > 50 ? 'bg-blue-500' : p > 0 ? 'bg-blue-300' : 'bg-blue-100';
           const text = p > 50 ? 'text-blue-600' : 'text-gray-700';
           const iconUrl = getIconUrl(daily.weather_code[i]);
-
           return `
             <div class="flex items-center gap-4 bg-white border border-gray-100 rounded-lg p-3 shadow-sm">
               <div class="w-[4.5rem] shrink-0 text-center">
@@ -600,17 +645,15 @@
         this.fetchWeatherData();
       }
     };
-
     window.addEventListener('offline', () => {
       UIService.showToast('인터넷에 연결되어 있지 않습니다.', 'warning');
     });
-
     if (!navigator.onLine) {
       UIService.showToast('인터넷에 연결되어 있지 않습니다.', 'warning');
     }
-
     window.onload = () => {
       UIService.initDOM();
+      SchoolService.updateUI();
       WeatherService.init();
       TimetableService.init();
       MealService.changeDate(0, true);
