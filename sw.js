@@ -1,7 +1,8 @@
 const CACHE_NAME = 'pwa-cache-v1';
 const ASSETS_TO_CACHE = [
   '/',
-  '/index.html'
+  '/index.html',
+  '/sw.js'
 ];
 self.addEventListener('install', event => {
   event.waitUntil(
