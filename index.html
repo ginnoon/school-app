@@ -99,7 +99,7 @@
           <div class="text-center">
             <h2 id="date-display" class="text-base font-bold text-gray-800"></h2>
             <button onclick="MealService.changeDate(0, true)"
-              class="text-xs text-blue-600 hover:underline font-medium mt-0.5 block mx-auto">오늘</button>
+              class="text-xs text-blue-600 hover:underline font-medium mt-0.5 block mx-auto">오늘로 이동</button>
           </div>
           <button onclick="MealService.changeDate(1)"
             class="w-8 h-8 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors font-medium">&gt;</button>
@@ -544,21 +544,27 @@
         DOM.menuTodayPrecip.textContent = `${todayPrecip}%`;
         const days = ['일', '월', '화', '수', '목', '금', '토'];
 
-        // WMO 날씨 코드별 이모지 매핑
-        const WMO_EMOJI = {
-          0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
-          45: '🌫️', 48: '🌫️',
-          51: '🌧️', 53: '🌧️', 55: '🌧️', 56: '🌧️', 57: '🌧️',
-          61: '🌧️', 63: '🌧️', 65: '🌧️', 66: '🌧️', 67: '🌧️',
-          71: '❄️', 73: '❄️', 75: '❄️', 77: '❄️',
-          80: '🌦️', 81: '🌧️', 82: '🌧️',
-          85: '🌨️', 86: '🌨️',
-          95: '🌩️', 96: '⛈️', 99: '⛈️'
+        const WMO_GOOGLE_ICON = {
+          0: 'sunny', 1: 'mostly_sunny', 2: 'partly_cloudy', 3: 'cloudy',
+          45: 'cloudy', 48: 'cloudy',
+          51: 'drizzle', 53: 'drizzle', 55: 'drizzle',
+          56: 'wintry_mix', 57: 'wintry_mix',
+          61: 'scattered_showers', 63: 'showers', 65: 'heavy',
+          66: 'wintry_mix', 67: 'wintry_mix',
+          71: 'flurries', 73: 'scattered_snow', 75: 'heavy_snow', 77: 'flurries',
+          80: 'scattered_showers', 81: 'showers', 82: 'heavy',
+          85: 'snow_showers', 86: 'heavy_snow',
+          95: 'isolated_tstorms', 96: 'strong_tstorms', 99: 'strong_tstorms'
+        };
+
+        const getIconUrl = (code) => {
+          const condition = WMO_GOOGLE_ICON[code] || 'cloudy';
+          return `https://maps.gstatic.com/weather/v1/${condition}.svg`;
         };
 
         if (DOM.menuTodayLabel) {
-          const todayEmoji = WMO_EMOJI[daily.weather_code[0]] || '☁️';
-          DOM.menuTodayLabel.textContent = `오늘 ${todayEmoji}`;
+          const todayIconUrl = getIconUrl(daily.weather_code[0]);
+          DOM.menuTodayLabel.innerHTML = `오늘 <img src="${todayIconUrl}" class="inline-block w-4 h-4 ml-1 align-middle drop-shadow-[0_1px_2px_rgba(102,115,139,.75)]" alt="오늘 날씨">`;
         }
 
         DOM.weatherList.innerHTML = daily.time.map((dStr, i) => {
@@ -567,13 +573,16 @@
           const p = isToday ? todayPrecip : daily.precipitation_probability_max[i];
           const color = p > 50 ? 'bg-blue-500' : p > 0 ? 'bg-blue-300' : 'bg-blue-100';
           const text = p > 50 ? 'text-blue-600' : 'text-gray-700';
-          const emoji = WMO_EMOJI[daily.weather_code[i]] || '☁️';
+          const iconUrl = getIconUrl(daily.weather_code[i]);
 
           return `
             <div class="flex items-center gap-4 bg-white border border-gray-100 rounded-lg p-3 shadow-sm">
               <div class="w-[4.5rem] shrink-0 text-center">
                 <div class="text-[11px] text-gray-500 font-medium">${d.getMonth() + 1}.${d.getDate()}</div>
-                <div class="text-sm font-bold ${isToday ? 'text-blue-600' : 'text-gray-800'} whitespace-nowrap">${isToday ? '오늘' : days[d.getDay()]} ${emoji}</div>
+                <div class="text-sm font-bold flex justify-center items-center gap-2 ${isToday ? 'text-blue-600' : 'text-gray-800'} whitespace-nowrap">
+                  <span>${isToday ? '오늘' : days[d.getDay()]}</span>
+                  <img src="${iconUrl}" class="w-6 h-6 object-contain drop-shadow-[0_2px_2px_rgba(102,115,139,.75)]" alt="날씨 아이콘">
+                </div>
               </div>
               <div class="flex-1">
                 <div class="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
