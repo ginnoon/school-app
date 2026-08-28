@@ -375,13 +375,16 @@
           DOM.toast.classList.add('pointer-events-none');
         }, 2600);
       },
-      navigate(viewName) {
+      navigate(viewName, isPopState = false) {
         ['viewMenu', 'viewMeal', 'viewTimetable', 'viewWeather'].forEach(view => {
           DOM[view].classList.add(view === 'viewMenu' ? '-translate-x-full' : 'translate-x-full');
           DOM[view].classList.remove('translate-x-0');
         });
         const targetView = 'view' + viewName.charAt(0).toUpperCase() + viewName.slice(1);
         if (DOM[targetView]) {
+          if (!isPopState) {
+            history.pushState({ page: viewName }, '', `#${viewName}`);
+          }
           DOM[targetView].classList.replace(targetView === 'viewMenu' ? '-translate-x-full' : 'translate-x-full', 'translate-x-0');
         }
       }
@@ -645,11 +648,18 @@
         this.fetchWeatherData();
       }
     };
+    window.addEventListener('popstate', (event) => {
+      const targetPage = (event.state && event.state.page) ? event.state.page : 'menu';
+      UIService.navigate(targetPage, true);
+    });
     window.addEventListener('offline', () => {
       UIService.showToast('인터넷에 연결되어 있지 않습니다.', 'warning');
     });
     if (!navigator.onLine) {
       UIService.showToast('인터넷에 연결되어 있지 않습니다.', 'warning');
+    }
+    if (!history.state) {
+    history.replaceState({ page: 'menu' }, '', '#menu');
     }
     window.onload = () => {
       UIService.initDOM();
