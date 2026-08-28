@@ -400,7 +400,7 @@
         if (!keyword) return UIService.showToast('학교 이름을 입력해주세요.', 'warning');
         DOM.schoolSearchResults.innerHTML = '<div class="text-center text-xs text-gray-400 py-10 animate-pulse">검색 중...</div>';
         try {
-          const res = await fetch(`https://open.neis.go.kr/hub/schoolInfo?Type=json&pIndex=1&pSize=20&SCHUL_NM=${encodeURIComponent(keyword)}`);
+          const res = await fetch(`https://ginnoon-api.vercel.app/NEIS/schoolInfo?Type=json&pIndex=1&pSize=20&SCHUL_NM=${encodeURIComponent(keyword)}`);
           const json = await res.json();
           const rows = json.schoolInfo?.[1]?.row;
           if (!rows || !rows.length) {
