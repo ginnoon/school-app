@@ -1,5 +1,5 @@
 ## SCHOOL APP
-Progressive Web App for schooling!
+Progressive Web App for schooling<br>select your school, paste timetable!
 
 ## Functions
 ### Meal
