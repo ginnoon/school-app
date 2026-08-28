@@ -648,6 +648,17 @@
         this.fetchWeatherData();
       }
     };
+    function initRouter() {
+      const hash = location.hash.replace('#', '');
+      const validViews = ['menu', 'meal', 'timetable', 'weather'];
+      if (hash && validViews.includes(hash)) {
+        history.replaceState({ page: hash }, '', `#${hash}`);
+        UIService.navigate(hash, true);
+      } else {
+        history.replaceState({ page: 'menu' }, '', '#menu');
+        UIService.navigate('menu', true);
+      }
+    }
     window.addEventListener('popstate', (event) => {
       const targetPage = (event.state && event.state.page) ? event.state.page : 'menu';
       UIService.navigate(targetPage, true);
@@ -659,10 +670,11 @@
       UIService.showToast('인터넷에 연결되어 있지 않습니다.', 'warning');
     }
     if (!history.state) {
-    history.replaceState({ page: 'menu' }, '', '#menu');
+      history.replaceState({ page: 'menu' }, '', '#menu');
     }
     window.onload = () => {
       UIService.initDOM();
+      initRouter();
       SchoolService.updateUI();
       WeatherService.init();
       TimetableService.init();
