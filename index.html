@@ -590,13 +590,22 @@
         const today = new Date();
         const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
 
+        // 쉬는 날(휴일) 여부를 판별하는 헬퍼 함수
+        const checkHoliday = (evt) => evt.SBTR_DD_SC_NM === '휴업일' || evt.SBTR_DD_SC_NM === '공휴일' || /휴업|공휴일|방학|추석|설날|개교기념|현충일|광복절|삼일절|어린이날|부처님|성탄절|한글날|선거/.test(evt.EVENT_NM);
+
         // 날짜 칸 생성
         for (let i = 1; i <= lastDate; i++) {
           const dayOfWeek = (firstDay + i - 1) % 7;
-          const color = dayOfWeek === 0 ? 'text-rose-500' : dayOfWeek === 6 ? 'text-blue-500' : 'text-gray-800';
+          
+          let isHoliday = false;
+          if (byDate[i]) isHoliday = byDate[i].some(checkHoliday);
+
+          const color = dayOfWeek === 0 || isHoliday ? 'text-rose-500' : dayOfWeek === 6 ? 'text-blue-500' : 'text-gray-800';
           const isToday = isCurrentMonth && today.getDate() === i;
           const bg = isToday ? 'bg-blue-50/40 hover:bg-blue-100/60' : 'bg-white hover:bg-blue-50/50';
-          const badge = isToday ? `<span class="bg-blue-500 text-white rounded-full w-4 h-4 inline-flex items-center justify-center font-bold shadow-sm">${i}</span>` : i;
+          
+          const todayBadgeColor = dayOfWeek === 0 || isHoliday ? 'bg-rose-500' : 'bg-blue-500';
+          const badge = isToday ? `<span class="${todayBadgeColor} text-white rounded-full w-4 h-4 inline-flex items-center justify-center font-bold shadow-sm">${i}</span>` : i;
 
           html += `<div onclick="ScheduleService.openDetailModal(${year}, ${month + 1}, ${i})" class="${bg} min-h-[65px] p-0.5 flex flex-col cursor-pointer transition-colors group">
             <span class="text-[10px] ${isToday ? '' : 'font-medium'} ${color} text-center block mb-0.5 group-hover:scale-110 transition-transform">${badge}</span>
@@ -604,7 +613,12 @@
           
           if (byDate[i]) {
             byDate[i].forEach(evt => {
-              html += `<div class="text-[9px] leading-tight bg-blue-50 text-blue-700 rounded-sm px-1 py-0.5 truncate border border-blue-100/50" title="${evt.EVENT_NM}">${evt.EVENT_NM}</div>`;
+              const isEvtHoliday = checkHoliday(evt);
+              const evtBg = isEvtHoliday ? 'bg-rose-50' : 'bg-blue-50';
+              const evtText = isEvtHoliday ? 'text-rose-700' : 'text-blue-700';
+              const evtBorder = isEvtHoliday ? 'border-rose-100/50' : 'border-blue-100/50';
+              
+              html += `<div class="text-[9px] leading-tight ${evtBg} ${evtText} rounded-sm px-1 py-0.5 truncate border ${evtBorder}" title="${evt.EVENT_NM}">${evt.EVENT_NM}</div>`;
             });
           }
           html += `</div></div>`;
