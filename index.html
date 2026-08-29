@@ -76,6 +76,11 @@
           <h2 class="font-bold text-base text-gray-800">시간표</h2>
           <p class="text-xs text-gray-500 mt-0.5">주간 학급 시간표 불러오기 및 조회</p>
         </button>
+        <button onclick="UIService.navigate('schedule')"
+          class="w-full p-4 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-50 transition-colors text-left group">
+          <h2 class="font-bold text-base text-gray-800">학사일정</h2>
+          <p class="text-xs text-gray-500 mt-0.5">월별 학사일정 및 행사 조회</p>
+        </button>
         <button onclick="UIService.navigate('weather')"
           class="w-full p-4 rounded-lg border border-blue-100 bg-blue-50/50 hover:bg-blue-50 transition-colors flex items-center justify-between group">
           <div class="text-left">
@@ -256,6 +261,34 @@
         <p class="text-xs text-gray-500">우측 상단 가져오기 버튼을 이용해 시간표를 등록할 수 있습니다.</p>
       </div>
     </section>
+    <section id="view-schedule"
+      class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
+      <header
+        class="p-4 border-b border-gray-200 bg-white flex items-center gap-3 sticky top-0 z-30 shrink-0">
+        <button onclick="UIService.navigate('menu')"
+          class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
+          &lt;
+        </button>
+        <h1 id="schedule-header-title" class="text-base font-bold text-gray-800">학사일정</h1>
+      </header>
+      <div class="p-5 flex-1 space-y-4">
+        <div class="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
+          <button onclick="ScheduleService.changeMonth(-1)"
+            class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&lt;</button>
+          <div class="text-center">
+            <h2 id="schedule-month-display" class="text-base font-bold text-gray-800"></h2>
+            <button onclick="ScheduleService.changeMonth(0, true)"
+              class="text-xs text-blue-600 hover:underline font-medium mt-0.5 block mx-auto">이번 달</button>
+          </div>
+          <button onclick="ScheduleService.changeMonth(1)"
+            class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&gt;</button>
+        </div>
+        <div class="bg-gray-50 border border-gray-100 rounded-lg p-4 shadow-sm">
+          <ul id="schedule-list" class="space-y-3 min-h-[200px]">
+          </ul>
+        </div>
+      </div>
+    </section>
     <section id="view-weather"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header
@@ -345,7 +378,9 @@
     const CLEAN_REGEX = /\s*\(.*?\)\s*|[0-9.]+\s*$/g;
     const State = {
       currentDate: new Date(),
+      scheduleMonth: new Date(),
       cachedMeals: new Map(),
+      cachedSchedules: new Map(),
       abortController: null,
       currentLocIndex: parseInt(localStorage.getItem('weatherLocIndex')) || 0,
       weatherData: null,
@@ -354,7 +389,7 @@
     const DOM = {};
     const UIService = {
       initDOM() {
-        ['view-menu', 'view-meal', 'view-timetable', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'menu-today-label', 'weather-location', 'weather-list', 'menu-school-name', 'menu-school-region', 'modal-school', 'school-search-input', 'school-search-results', 'meal-header-title'].forEach(id => {
+        ['view-menu', 'view-meal', 'view-timetable', 'view-schedule', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'menu-today-label', 'weather-location', 'weather-list', 'menu-school-name', 'menu-school-region', 'modal-school', 'school-search-input', 'school-search-results', 'meal-header-title', 'schedule-header-title', 'schedule-month-display', 'schedule-list'].forEach(id => {
           DOM[id.replace(/-([a-z])/g, g => g[1].toUpperCase())] = document.getElementById(id);
         });
         DOM.timetableBody = document.querySelector('#timetable-grid tbody');
@@ -376,7 +411,7 @@
         }, 2600);
       },
       navigate(viewName, isPopState = false) {
-        ['viewMenu', 'viewMeal', 'viewTimetable', 'viewWeather'].forEach(view => {
+        ['viewMenu', 'viewMeal', 'viewTimetable', 'viewSchedule', 'viewWeather'].forEach(view => {
           DOM[view].classList.add(view === 'viewMenu' ? '-translate-x-full' : 'translate-x-full');
           DOM[view].classList.remove('translate-x-0');
         });
@@ -426,16 +461,19 @@
         State.school = { atptCode, schulCode, schulNm, orgRdnma };
         localStorage.setItem('mySchool', JSON.stringify(State.school));
         State.cachedMeals.clear();
+        State.cachedSchedules.clear();
         this.updateUI();
         this.toggleModal(false);
         UIService.showToast(`${schulNm}로 설정되었습니다.`, 'success');
         MealService.fetchMealData(State.currentDate);
+        ScheduleService.fetchScheduleData(State.scheduleMonth);
       },
       updateUI() {
         if (!State.school) return;
         if (DOM.menuSchoolName) DOM.menuSchoolName.textContent = State.school.schulNm;
         if (DOM.menuSchoolRegion) DOM.menuSchoolRegion.textContent = State.school.orgRdnma || '선택된 학교';
         if (DOM.mealHeaderTitle) DOM.mealHeaderTitle.textContent = `${State.school.schulNm} 급식표`;
+        if (DOM.scheduleHeaderTitle) DOM.scheduleHeaderTitle.textContent = `${State.school.schulNm} 학사일정`;
       }
     };
     const MealService = {
@@ -488,6 +526,85 @@
             const errHtml = '<span class="text-xs text-rose-500 font-medium">데이터를 불러오지 못했습니다.</span>';
             DOM.m.innerHTML = DOM.n.innerHTML = errHtml;
           }
+        }
+      }
+    };
+    const ScheduleService = {
+      formatMonthStr: (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`,
+      renderMonth() {
+        DOM.scheduleMonthDisplay.textContent = `${State.scheduleMonth.getFullYear()}년 ${State.scheduleMonth.getMonth() + 1}월`;
+      },
+      changeMonth(offset, reset = false) {
+        if (reset) {
+          State.scheduleMonth = new Date();
+        } else {
+          State.scheduleMonth.setMonth(State.scheduleMonth.getMonth() + offset);
+        }
+        this.renderMonth();
+        this.fetchScheduleData(State.scheduleMonth);
+      },
+      displaySchedule(schedules) {
+        if (!schedules || schedules.length === 0) {
+          DOM.scheduleList.innerHTML = '<li class="text-sm text-gray-500 text-center py-4">이 달의 학사일정이 없습니다.</li>';
+          return;
+        }
+        DOM.scheduleList.innerHTML = schedules.map(item => {
+          const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][new Date(item.AA_YMD.slice(0,4), parseInt(item.AA_YMD.slice(4,6))-1, item.AA_YMD.slice(6,8)).getDay()];
+          const dateFormatted = `${parseInt(item.AA_YMD.slice(4,6))}.${parseInt(item.AA_YMD.slice(6,8))}(${dayOfWeek})`;
+          return `
+            <li class="flex items-start gap-3 border-b border-gray-200/60 pb-3 last:border-0 last:pb-0">
+              <div class="shrink-0 w-12 text-center pt-0.5">
+                <span class="block text-xs font-bold text-gray-600">${dateFormatted}</span>
+              </div>
+              <div class="flex-1">
+                <span class="text-sm font-medium text-gray-800">${item.EVENT_NM}</span>
+                ${item.EVENT_CNTNT ? `<p class="text-[11px] text-gray-500 mt-0.5">${item.EVENT_CNTNT}</p>` : ''}
+              </div>
+            </li>
+          `;
+        }).join('');
+      },
+      async fetchScheduleData(dateObj) {
+        DOM.scheduleList.innerHTML = `<li class="py-4">${CONFIG.SKELETON_HTML}</li>`;
+        
+        if (!State.school) {
+          DOM.scheduleList.innerHTML = '<li class="text-sm text-rose-500 font-medium text-center py-4">학교가 설정되지 않았습니다.</li>';
+          return;
+        }
+        
+        const monthStr = this.formatMonthStr(dateObj);
+        if (State.cachedSchedules.has(monthStr)) {
+          return this.displaySchedule(State.cachedSchedules.get(monthStr));
+        }
+
+        const fromDate = `${monthStr}01`;
+        const lastDay = new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
+        const toDate = `${monthStr}${lastDay}`;
+
+        const url = `https://open.neis.go.kr/hub/SchoolSchedule?Type=json&pSize=100&ATPT_OFCDC_SC_CODE=${State.school.atptCode}&SD_SCHUL_CODE=${State.school.schulCode}&AA_FROM_YMD=${fromDate}&AA_TO_YMD=${toDate}`;
+
+        try {
+          const res = await fetch(url);
+          const json = await res.json();
+          const schedules = json.SchoolSchedule?.[1]?.row || [];
+          
+          schedules.sort((a, b) => a.AA_YMD.localeCompare(b.AA_YMD));
+          
+          const uniqueSchedules = [];
+          const seen = new Set();
+          schedules.forEach(item => {
+            const key = `${item.AA_YMD}-${item.EVENT_NM}`;
+            // 학년별로 중복된 이벤트나 매주 있는 토요휴업일은 가독성을 위해 필터링합니다.
+            if (!seen.has(key) && item.EVENT_NM !== '토요휴업일') {
+              seen.add(key);
+              uniqueSchedules.push(item);
+            }
+          });
+
+          State.cachedSchedules.set(monthStr, uniqueSchedules);
+          this.displaySchedule(uniqueSchedules);
+        } catch (e) {
+          DOM.scheduleList.innerHTML = '<li class="text-sm text-rose-500 font-medium text-center py-4">데이터를 불러오지 못했습니다.</li>';
         }
       }
     };
@@ -650,7 +767,7 @@
     };
     function initRouter() {
       const hash = location.hash.replace('#', '');
-      const validViews = ['menu', 'meal', 'timetable', 'weather'];
+      const validViews = ['menu', 'meal', 'timetable', 'schedule', 'weather'];
       if (hash && validViews.includes(hash)) {
         history.replaceState({ page: hash }, '', `#${hash}`);
         UIService.navigate(hash, true);
@@ -679,6 +796,7 @@
       WeatherService.init();
       TimetableService.init();
       MealService.changeDate(0, true);
+      ScheduleService.changeMonth(0, true);
     };
   </script>
   <script>
