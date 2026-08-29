@@ -581,7 +581,7 @@
         const lastDay = new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
         const toDate = `${monthStr}${lastDay}`;
 
-        const url = `https://open.neis.go.kr/hub/SchoolSchedule?Type=json&pSize=100&ATPT_OFCDC_SC_CODE=${State.school.atptCode}&SD_SCHUL_CODE=${State.school.schulCode}&AA_FROM_YMD=${fromDate}&AA_TO_YMD=${toDate}`;
+        const url = `https://ginnoon-api.vercel.app/NEIS/SchoolSchedule?Type=json&pSize=100&ATPT_OFCDC_SC_CODE=${State.school.atptCode}&SD_SCHUL_CODE=${State.school.schulCode}&AA_FROM_YMD=${fromDate}&AA_TO_YMD=${toDate}`;
 
         try {
           const res = await fetch(url);
