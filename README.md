@@ -16,4 +16,4 @@ Check the probability of precipitation for the week
 ## Todo
 - [x] personal timetable
 - [ ] some buttons
-- [ ] academic calendar
+- [x] academic calendar
