@@ -283,9 +283,9 @@
           <button onclick="ScheduleService.changeMonth(1)"
             class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&gt;</button>
         </div>
-        <div class="bg-gray-50 border border-gray-100 rounded-lg p-4 shadow-sm">
-          <ul id="schedule-list" class="space-y-3 min-h-[200px]">
-          </ul>
+        <div class="bg-gray-100 border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+          <div id="schedule-list" class="w-full">
+          </div>
         </div>
       </div>
     </section>
@@ -544,31 +544,77 @@
         this.fetchScheduleData(State.scheduleMonth);
       },
       displaySchedule(schedules) {
-        if (!schedules || schedules.length === 0) {
-          DOM.scheduleList.innerHTML = '<li class="text-sm text-gray-500 text-center py-4">이 달의 학사일정이 없습니다.</li>';
-          return;
+        const year = State.scheduleMonth.getFullYear();
+        const month = State.scheduleMonth.getMonth();
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDate = new Date(year, month + 1, 0).getDate();
+
+        // 날짜별로 일정 그룹화
+        const byDate = {};
+        (schedules || []).forEach(item => {
+          const d = parseInt(item.AA_YMD.slice(6, 8), 10);
+          if (!byDate[d]) byDate[d] = [];
+          byDate[d].push(item);
+        });
+
+        const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+        let html = '<div class="grid grid-cols-7 gap-px bg-gray-200">';
+
+        // 요일 헤더
+        dayNames.forEach((d, i) => {
+          const color = i === 0 ? 'text-rose-500' : i === 6 ? 'text-blue-500' : 'text-gray-700';
+          html += `<div class="bg-gray-100 text-center py-1.5 text-[10px] font-bold ${color}">${d}</div>`;
+        });
+
+        // 1일 이전 빈 칸
+        for (let i = 0; i < firstDay; i++) {
+          html += '<div class="bg-gray-50 min-h-[65px]"></div>';
         }
-        DOM.scheduleList.innerHTML = schedules.map(item => {
-          const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][new Date(item.AA_YMD.slice(0,4), parseInt(item.AA_YMD.slice(4,6))-1, item.AA_YMD.slice(6,8)).getDay()];
-          const dateFormatted = `${parseInt(item.AA_YMD.slice(4,6))}.${parseInt(item.AA_YMD.slice(6,8))}(${dayOfWeek})`;
-          return `
-            <li class="flex items-start gap-3 border-b border-gray-200/60 pb-3 last:border-0 last:pb-0">
-              <div class="shrink-0 w-12 text-center pt-0.5">
-                <span class="block text-xs font-bold text-gray-600">${dateFormatted}</span>
-              </div>
-              <div class="flex-1">
-                <span class="text-sm font-medium text-gray-800">${item.EVENT_NM}</span>
-                ${item.EVENT_CNTNT ? `<p class="text-[11px] text-gray-500 mt-0.5">${item.EVENT_CNTNT}</p>` : ''}
-              </div>
-            </li>
-          `;
-        }).join('');
+
+        const today = new Date();
+        const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+
+        // 날짜 칸 생성
+        for (let i = 1; i <= lastDate; i++) {
+          const dayOfWeek = (firstDay + i - 1) % 7;
+          const color = dayOfWeek === 0 ? 'text-rose-500' : dayOfWeek === 6 ? 'text-blue-500' : 'text-gray-800';
+          const isToday = isCurrentMonth && today.getDate() === i;
+          const bg = isToday ? 'bg-blue-50/40' : 'bg-white';
+          const badge = isToday ? `<span class="bg-blue-500 text-white rounded-full w-4 h-4 inline-flex items-center justify-center font-bold shadow-sm">${i}</span>` : i;
+
+          html += `<div class="${bg} min-h-[65px] p-0.5 flex flex-col">
+            <span class="text-[10px] ${isToday ? '' : 'font-medium'} ${color} text-center block mb-0.5">${badge}</span>
+            <div class="flex-1 flex flex-col gap-[1px] overflow-hidden">`;
+          
+          if (byDate[i]) {
+            byDate[i].forEach(evt => {
+              html += `<div class="text-[9px] leading-tight bg-blue-50 text-blue-700 rounded-sm px-1 py-0.5 truncate border border-blue-100/50" title="${evt.EVENT_NM}">${evt.EVENT_NM}</div>`;
+            });
+          }
+          html += `</div></div>`;
+        }
+
+        // 마지막 날짜 이후 빈 칸
+        const totalCells = firstDay + lastDate;
+        const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+        for (let i = 0; i < remainingCells; i++) {
+          html += '<div class="bg-gray-50 min-h-[65px]"></div>';
+        }
+
+        html += '</div>';
+        DOM.scheduleList.innerHTML = html;
       },
       async fetchScheduleData(dateObj) {
-        DOM.scheduleList.innerHTML = `<li class="py-4">${CONFIG.SKELETON_HTML}</li>`;
+        // 캘린더 모양의 스켈레톤 UI 로딩
+        DOM.scheduleList.innerHTML = `
+          <div class="grid grid-cols-7 gap-px bg-gray-200 animate-pulse">
+            ${Array(7).fill('<div class="bg-gray-100 h-6"></div>').join('')}
+            ${Array(35).fill('<div class="bg-white min-h-[65px] p-1"><div class="w-3 h-3 bg-gray-200 rounded mx-auto mb-1"></div><div class="w-full h-3 bg-gray-100 rounded"></div></div>').join('')}
+          </div>
+        `;
         
         if (!State.school) {
-          DOM.scheduleList.innerHTML = '<li class="text-sm text-rose-500 font-medium text-center py-4">학교가 설정되지 않았습니다.</li>';
+          DOM.scheduleList.innerHTML = '<div class="text-sm text-rose-500 font-medium text-center py-10 bg-white">학교가 설정되지 않았습니다.</div>';
           return;
         }
         
@@ -581,7 +627,7 @@
         const lastDay = new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
         const toDate = `${monthStr}${lastDay}`;
 
-        const url = `https://ginnoon-api.vercel.app/NEIS/SchoolSchedule?Type=json&pSize=100&ATPT_OFCDC_SC_CODE=${State.school.atptCode}&SD_SCHUL_CODE=${State.school.schulCode}&AA_FROM_YMD=${fromDate}&AA_TO_YMD=${toDate}`;
+        const url = `https://open.neis.go.kr/hub/SchoolSchedule?Type=json&pSize=100&ATPT_OFCDC_SC_CODE=${State.school.atptCode}&SD_SCHUL_CODE=${State.school.schulCode}&AA_FROM_YMD=${fromDate}&AA_TO_YMD=${toDate}`;
 
         try {
           const res = await fetch(url);
@@ -594,7 +640,6 @@
           const seen = new Set();
           schedules.forEach(item => {
             const key = `${item.AA_YMD}-${item.EVENT_NM}`;
-            // 학년별로 중복된 이벤트나 매주 있는 토요휴업일은 가독성을 위해 필터링합니다.
             if (!seen.has(key) && item.EVENT_NM !== '토요휴업일') {
               seen.add(key);
               uniqueSchedules.push(item);
@@ -604,7 +649,7 @@
           State.cachedSchedules.set(monthStr, uniqueSchedules);
           this.displaySchedule(uniqueSchedules);
         } catch (e) {
-          DOM.scheduleList.innerHTML = '<li class="text-sm text-rose-500 font-medium text-center py-4">데이터를 불러오지 못했습니다.</li>';
+          DOM.scheduleList.innerHTML = '<div class="text-sm text-rose-500 font-medium text-center py-10 bg-white">데이터를 불러오지 못했습니다.</div>';
         }
       }
     };
