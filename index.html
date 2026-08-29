@@ -591,7 +591,7 @@
         const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
 
         // 쉬는 날(휴일) 여부를 판별하는 헬퍼 함수
-        const checkHoliday = (evt) => evt.SBTR_DD_SC_NM === '휴업일' || evt.SBTR_DD_SC_NM === '공휴일' || /휴업|공휴일|방학|추석|설날|개교기념|현충일|광복절|삼일절|어린이날|부처님|성탄절|한글날|선거/.test(evt.EVENT_NM);
+        const checkHoliday = (evt) => evt.SBTR_DD_SC_NM === '휴업일' || evt.SBTR_DD_SC_NM === '공휴일';
 
         // 날짜 칸 생성
         for (let i = 1; i <= lastDate; i++) {
