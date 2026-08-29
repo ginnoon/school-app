@@ -326,6 +326,22 @@
         <p class="text-xs text-gray-400 text-center py-10">학교 이름을 입력 후 검색 버튼 또는 엔터 키를 누르세요.</p>
       </div>
     </div>
+    <div id="modal-schedule-detail" onclick="if(event.target === this) ScheduleService.closeDetailModal()"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-200">
+      <div id="schedule-detail-card"
+        class="bg-white rounded-xl shadow-xl border border-gray-200 w-full max-w-[290px] overflow-hidden flex flex-col transform scale-95 transition-transform duration-200">
+        <header class="p-3.5 px-4 border-b border-gray-100 flex items-center justify-between bg-gray-50 shrink-0">
+          <div>
+            <h3 id="schedule-detail-date" class="font-bold text-xs text-gray-800">-</h3>
+            <p class="text-[10px] text-gray-400">학사일정 상세 정보</p>
+          </div>
+          <button onclick="ScheduleService.closeDetailModal()"
+            class="w-7 h-7 rounded-md border border-gray-200 hover:bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm transition-colors">&times;</button>
+        </header>
+        <div id="schedule-detail-content" class="p-4 max-h-64 overflow-y-auto hide-scrollbar space-y-2 text-xs">
+        </div>
+      </div>
+    </div>
   </main>
   <footer class="w-full max-w-sm mx-auto mt-2.5 text-center shrink-0">
     <a href="https://github.com/ginnoon/school-app" target="_blank" rel="noopener noreferrer"
@@ -389,7 +405,7 @@
     const DOM = {};
     const UIService = {
       initDOM() {
-        ['view-menu', 'view-meal', 'view-timetable', 'view-schedule', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'menu-today-label', 'weather-location', 'weather-list', 'menu-school-name', 'menu-school-region', 'modal-school', 'school-search-input', 'school-search-results', 'meal-header-title', 'schedule-header-title', 'schedule-month-display', 'schedule-list'].forEach(id => {
+        ['view-menu', 'view-meal', 'view-timetable', 'view-schedule', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'menu-today-label', 'weather-location', 'weather-list', 'menu-school-name', 'menu-school-region', 'modal-school', 'school-search-input', 'school-search-results', 'meal-header-title', 'schedule-header-title', 'schedule-month-display', 'schedule-list', 'modal-schedule-detail', 'schedule-detail-card', 'schedule-detail-date', 'schedule-detail-content'].forEach(id => {
           DOM[id.replace(/-([a-z])/g, g => g[1].toUpperCase())] = document.getElementById(id);
         });
         DOM.timetableBody = document.querySelector('#timetable-grid tbody');
@@ -579,11 +595,11 @@
           const dayOfWeek = (firstDay + i - 1) % 7;
           const color = dayOfWeek === 0 ? 'text-rose-500' : dayOfWeek === 6 ? 'text-blue-500' : 'text-gray-800';
           const isToday = isCurrentMonth && today.getDate() === i;
-          const bg = isToday ? 'bg-blue-50/40' : 'bg-white';
+          const bg = isToday ? 'bg-blue-50/40 hover:bg-blue-100/60' : 'bg-white hover:bg-blue-50/50';
           const badge = isToday ? `<span class="bg-blue-500 text-white rounded-full w-4 h-4 inline-flex items-center justify-center font-bold shadow-sm">${i}</span>` : i;
 
-          html += `<div class="${bg} min-h-[65px] p-0.5 flex flex-col">
-            <span class="text-[10px] ${isToday ? '' : 'font-medium'} ${color} text-center block mb-0.5">${badge}</span>
+          html += `<div onclick="ScheduleService.openDetailModal(${year}, ${month + 1}, ${i})" class="${bg} min-h-[65px] p-0.5 flex flex-col cursor-pointer transition-colors group">
+            <span class="text-[10px] ${isToday ? '' : 'font-medium'} ${color} text-center block mb-0.5 group-hover:scale-110 transition-transform">${badge}</span>
             <div class="flex-1 flex flex-col gap-[1px] overflow-hidden">`;
           
           if (byDate[i]) {
@@ -650,6 +666,61 @@
           this.displaySchedule(uniqueSchedules);
         } catch (e) {
           DOM.scheduleList.innerHTML = '<div class="text-sm text-rose-500 font-medium text-center py-10 bg-white">데이터를 불러오지 못했습니다.</div>';
+        }
+      },
+      openDetailModal(year, month, day) {
+        const monthStr = `${year}${String(month).padStart(2, '0')}`;
+        const schedules = State.cachedSchedules.get(monthStr) || [];
+        const dayStr = String(day).padStart(2, '0');
+        const targetDateYMD = `${monthStr}${dayStr}`;
+        
+        const dayEvents = schedules.filter(item => item.AA_YMD === targetDateYMD);
+        const dateObj = new Date(year, month - 1, day);
+        const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+        const dayOfWeekStr = dayNames[dateObj.getDay()];
+        
+        if (DOM.scheduleDetailDate) {
+          DOM.scheduleDetailDate.textContent = `${year}년 ${month}월 ${day}일 (${dayOfWeekStr})`;
+        }
+
+        if (DOM.scheduleDetailContent) {
+          if (dayEvents.length === 0) {
+            DOM.scheduleDetailContent.innerHTML = '<div class="text-center py-6 text-gray-400 text-xs">등록된 학사일정이 없습니다.</div>';
+          } else {
+            DOM.scheduleDetailContent.innerHTML = dayEvents.map(evt => {
+              const targetGrades = [];
+              if (evt.ONE_GRADE_EVENT_YN === 'Y') targetGrades.push('1학년');
+              if (evt.TW_GRADE_EVENT_YN === 'Y') targetGrades.push('2학년');
+              if (evt.THREE_GRADE_EVENT_YN === 'Y') targetGrades.push('3학년');
+              const gradeText = targetGrades.length > 0 ? targetGrades.join(', ') : '전학년';
+
+              return `
+                <div class="p-3 rounded-lg bg-blue-50/70 border border-blue-100 flex flex-col gap-1 text-left">
+                  <div class="font-bold text-xs text-blue-900">${evt.EVENT_NM}</div>
+                  <div class="flex items-center justify-between text-[10px] text-blue-600 mt-1">
+                    <span class="bg-white px-1.5 py-0.5 rounded border border-blue-100 font-medium">대상: ${gradeText}</span>
+                    ${evt.SBTR_DD_SC_NM ? `<span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-medium">${evt.SBTR_DD_SC_NM}</span>` : ''}
+                  </div>
+                  ${evt.EVENT_CNTNT ? `<p class="text-[11px] text-gray-600 mt-1 leading-relaxed">${evt.EVENT_CNTNT}</p>` : ''}
+                </div>
+              `;
+            }).join('');
+          }
+        }
+
+        if (DOM.modalScheduleDetail && DOM.scheduleDetailCard) {
+          DOM.modalScheduleDetail.classList.remove('opacity-0', 'pointer-events-none');
+          DOM.modalScheduleDetail.classList.add('opacity-100');
+          DOM.scheduleDetailCard.classList.remove('scale-95');
+          DOM.scheduleDetailCard.classList.add('scale-100');
+        }
+      },
+      closeDetailModal() {
+        if (DOM.modalScheduleDetail && DOM.scheduleDetailCard) {
+          DOM.modalScheduleDetail.classList.remove('opacity-100');
+          DOM.modalScheduleDetail.classList.add('opacity-0', 'pointer-events-none');
+          DOM.scheduleDetailCard.classList.remove('scale-100');
+          DOM.scheduleDetailCard.classList.add('scale-95');
         }
       }
     };
