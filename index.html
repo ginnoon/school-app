@@ -49,12 +49,9 @@
   </style>
 </head>
 
-<body
-  class="h-[100dvh] w-full flex flex-col items-center justify-center p-3 bg-gray-50 text-gray-800 font-sans overflow-hidden">
-  <main
-    class="w-full max-w-sm flex-1 bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col relative overflow-hidden">
-    <section id="view-menu"
-      class="flex flex-col h-full absolute inset-0 z-10 bg-white transition-transform duration-300 transform translate-x-0">
+<body class="h-[100dvh] w-full flex flex-col items-center justify-center p-3 bg-gray-50 text-gray-800 font-sans overflow-hidden">
+  <main class="w-full max-w-sm flex-1 bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col relative overflow-hidden">
+    <section id="view-menu" class="flex flex-col h-full absolute inset-0 z-10 bg-white transition-transform duration-300 transform translate-x-0">
       <header class="border-b border-gray-200 p-3 px-4 flex items-center justify-between shrink-0 bg-white">
         <div class="overflow-hidden pr-2">
           <h1 id="menu-school-name" class="text-base font-bold text-gray-800 truncate">학교</h1>
@@ -94,60 +91,49 @@
         </button>
       </div>
     </section>
-    <section id="view-meal"
-      class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
+    
+    <section id="view-meal" class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header class="p-4 border-b border-gray-200 bg-white flex items-center gap-3 sticky top-0 z-30 shrink-0">
-        <button onclick="UIService.navigate('menu')"
-          class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
+        <button onclick="UIService.navigate('menu')" class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
           &lt;
         </button>
         <h1 id="meal-header-title" class="text-base font-bold text-gray-800">급식표</h1>
       </header>
       <div class="p-5 flex-1 space-y-4">
         <div class="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
-          <button onclick="MealService.changeDate(-1)"
-            class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&lt;</button>
+          <button onclick="MealService.changeDate(-1)" class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&lt;</button>
           <div class="text-center">
             <h2 id="date-display" class="text-base font-bold text-gray-800"></h2>
-            <button onclick="MealService.changeDate(0, true)"
-              class="text-xs text-blue-600 hover:underline font-medium mt-0.5 block mx-auto">오늘로 이동</button>
+            <button onclick="MealService.changeDate(0, true)" class="text-xs text-blue-600 hover:underline font-medium mt-0.5 block mx-auto">오늘로 이동</button>
           </div>
-          <button onclick="MealService.changeDate(1)"
-            class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&gt;</button>
+          <button onclick="MealService.changeDate(1)" class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&gt;</button>
         </div>
         <div class="border border-gray-100 rounded-lg p-4 bg-gray-50 shadow-sm">
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-gray-200/60">
             <h3 class="text-sm font-bold text-gray-800">중식</h3>
-            <span id="m-cal"
-              class="text-[10px] font-medium text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">-
-              Kcal</span>
+            <span id="m-cal" class="text-[10px] font-medium text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">- Kcal</span>
           </div>
           <div id="m" class="text-sm text-gray-700 leading-relaxed min-h-[70px]"></div>
         </div>
         <div class="border border-gray-100 rounded-lg p-4 bg-gray-50 shadow-sm">
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-gray-200/60">
             <h3 class="text-sm font-bold text-gray-800">석식</h3>
-            <span id="n-cal"
-              class="text-[10px] font-medium text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">-
-              Kcal</span>
+            <span id="n-cal" class="text-[10px] font-medium text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">- Kcal</span>
           </div>
           <div id="n" class="text-sm text-gray-700 leading-relaxed min-h-[70px]"></div>
         </div>
       </div>
     </section>
-    <section id="view-timetable"
-      class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
-      <header
-        class="p-4 border-b border-gray-200 bg-white flex items-center justify-between sticky top-0 z-30 shrink-0">
+
+    <section id="view-timetable" class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
+      <header class="p-4 border-b border-gray-200 bg-white flex items-center justify-between sticky top-0 z-30 shrink-0">
         <div class="flex items-center gap-3">
-          <button onclick="UIService.navigate('menu')"
-            class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
+          <button onclick="UIService.navigate('menu')" class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
             &lt;
           </button>
           <h1 class="text-base font-bold text-gray-800">시간표</h1>
         </div>
-        <button onclick="TimetableService.importFromClipboard()"
-          class="px-2.5 py-1 text-xs font-medium rounded-md bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100 transition-colors">
+        <button onclick="TimetableService.importFromClipboard()" class="px-2.5 py-1 text-xs font-medium rounded-md bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100 transition-colors">
           가져오기
         </button>
       </header>
@@ -164,137 +150,55 @@
             </colgroup>
             <thead>
               <tr>
-                <th scope="col"
-                  class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 left-0 z-20">
-                  교시</th>
-                <th scope="col"
-                  class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">
-                  월</th>
-                <th scope="col"
-                  class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">
-                  화</th>
-                <th scope="col"
-                  class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">
-                  수</th>
-                <th scope="col"
-                  class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">
-                  목</th>
-                <th scope="col"
-                  class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">
-                  금</th>
+                <th scope="col" class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 left-0 z-20">교시</th>
+                <th scope="col" class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">월</th>
+                <th scope="col" class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">화</th>
+                <th scope="col" class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">수</th>
+                <th scope="col" class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">목</th>
+                <th scope="col" class="bg-gray-50 border-b border-r border-gray-200 py-2.5 font-semibold text-gray-700 sticky top-0 z-10">금</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row"
-                  class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">
-                  1교시</th>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-              </tr>
-              <tr>
-                <th scope="row"
-                  class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">
-                  2교시</th>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-              </tr>
-              <tr>
-                <th scope="row"
-                  class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">
-                  3교시</th>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-              </tr>
-              <tr>
-                <th scope="row"
-                  class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">
-                  4교시</th>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-              </tr>
-              <tr>
-                <th scope="row"
-                  class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">
-                  5교시</th>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-              </tr>
-              <tr>
-                <th scope="row"
-                  class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">
-                  6교시</th>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-              </tr>
-              <tr>
-                <th scope="row"
-                  class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">
-                  7교시</th>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-                <td class="border-b border-r border-gray-200 p-1.5 bg-white"></td>
-              </tr>
+              <tr><th scope="row" class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">1교시</th><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td></tr>
+              <tr><th scope="row" class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">2교시</th><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td></tr>
+              <tr><th scope="row" class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">3교시</th><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td></tr>
+              <tr><th scope="row" class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">4교시</th><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td></tr>
+              <tr><th scope="row" class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">5교시</th><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td></tr>
+              <tr><th scope="row" class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">6교시</th><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td></tr>
+              <tr><th scope="row" class="bg-gray-50 border-b border-r border-gray-200 p-1.5 font-medium text-gray-600 sticky left-0 z-10">7교시</th><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td><td class="border-b border-r border-gray-200 p-1.5 bg-white"></td></tr>
             </tbody>
           </table>
         </div>
         <p class="text-xs text-gray-500">우측 상단 가져오기 버튼을 이용해 시간표를 등록할 수 있습니다.</p>
       </div>
     </section>
-    <section id="view-schedule"
-      class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
+
+    <section id="view-schedule" class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
       <header class="p-4 border-b border-gray-200 bg-white flex items-center gap-3 sticky top-0 z-30 shrink-0">
-        <button onclick="UIService.navigate('menu')"
-          class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
+        <button onclick="UIService.navigate('menu')" class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
           &lt;
         </button>
         <h1 id="schedule-header-title" class="text-base font-bold text-gray-800">학사일정</h1>
       </header>
       <div class="p-5 flex-1 space-y-4">
         <div class="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
-          <button onclick="ScheduleService.changeMonth(-1)"
-            class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&lt;</button>
+          <button onclick="ScheduleService.changeMonth(-1)" class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&lt;</button>
           <div class="text-center">
             <h2 id="schedule-month-display" class="text-base font-bold text-gray-800"></h2>
-            <button onclick="ScheduleService.changeMonth(0, true)"
-              class="text-xs text-blue-600 hover:underline font-medium mt-0.5 block mx-auto">이번 달</button>
+            <button onclick="ScheduleService.changeMonth(0, true)" class="text-xs text-blue-600 hover:underline font-medium mt-0.5 block mx-auto">이번 달</button>
           </div>
-          <button onclick="ScheduleService.changeMonth(1)"
-            class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&gt;</button>
+          <button onclick="ScheduleService.changeMonth(1)" class="w-8 h-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors font-medium">&gt;</button>
         </div>
         <div class="bg-gray-100 border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-          <div id="schedule-list" class="w-full">
-          </div>
+          <div id="schedule-list" class="w-full"></div>
         </div>
       </div>
     </section>
-    <section id="view-weather"
-      class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
-      <header
-        class="p-4 border-b border-gray-200 bg-white flex items-center justify-between sticky top-0 z-30 shrink-0">
+
+    <section id="view-weather" class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
+      <header class="p-4 border-b border-gray-200 bg-white flex items-center justify-between sticky top-0 z-30 shrink-0">
         <div class="flex items-center gap-3">
-          <button onclick="UIService.navigate('menu')"
-            class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
+          <button onclick="UIService.navigate('menu')" class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
             &lt;
           </button>
           <h1 class="text-base font-bold text-gray-800">주간 강수 확률</h1>
@@ -304,69 +208,60 @@
         </select>
       </header>
       <div class="p-4 flex-1 overflow-y-auto hide-scrollbar">
-        <div id="weather-list" class="flex flex-col gap-3 pb-6">
-        </div>
+        <div id="weather-list" class="flex flex-col gap-3 pb-6"></div>
       </div>
     </section>
+
     <div id="modal-school" class="flex flex-col h-full absolute inset-0 bg-white translate-y-full z-40">
       <header class="p-4 border-b border-gray-200 flex items-center justify-between shrink-0 bg-white">
         <h2 class="text-base font-bold text-gray-800">학교 검색</h2>
-        <button onclick="SchoolService.toggleModal(false)"
-          class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-500 font-bold transition-colors">&times;</button>
+        <button onclick="SchoolService.toggleModal(false)" class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-500 font-bold transition-colors">&times;</button>
       </header>
       <div class="p-4 border-b border-gray-100 flex gap-2 shrink-0 bg-gray-50">
         <input type="text" id="school-search-input" placeholder="학교 이름 입력 (예: 충렬고)"
           onkeydown="if(event.key==='Enter') SchoolService.search()"
           class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <button onclick="SchoolService.search()"
-          class="px-3.5 py-2 bg-blue-500 text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition-colors shrink-0">검색</button>
+        <button onclick="SchoolService.search()" class="px-3.5 py-2 bg-blue-500 text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition-colors shrink-0">검색</button>
       </div>
       <div id="school-search-results" class="p-4 flex-1 overflow-y-auto hide-scrollbar space-y-2">
         <p class="text-xs text-gray-400 text-center py-10">학교 이름을 입력 후 검색 버튼 또는 엔터 키를 누르세요.</p>
       </div>
     </div>
+
     <div id="modal-schedule-detail" onclick="if(event.target === this) ScheduleService.closeDetailModal()"
       class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-200">
-      <div id="schedule-detail-card"
-        class="bg-white rounded-xl shadow-xl border border-gray-200 w-full max-w-[290px] overflow-hidden flex flex-col transform scale-95 transition-transform duration-200">
+      <div id="schedule-detail-card" class="bg-white rounded-xl shadow-xl border border-gray-200 w-full max-w-[290px] overflow-hidden flex flex-col transform scale-95 transition-transform duration-200">
         <header class="p-3.5 px-4 border-b border-gray-100 flex items-center justify-between bg-gray-50 shrink-0">
           <div>
             <h3 id="schedule-detail-date" class="font-bold text-xs text-gray-800">-</h3>
             <p class="text-[10px] text-gray-400">학사일정 상세 정보</p>
           </div>
-          <button onclick="ScheduleService.closeDetailModal()"
-            class="w-7 h-7 rounded-md border border-gray-200 hover:bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm transition-colors">&times;</button>
+          <button onclick="ScheduleService.closeDetailModal()" class="w-7 h-7 rounded-md border border-gray-200 hover:bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm transition-colors">&times;</button>
         </header>
-        <div id="schedule-detail-content" class="p-4 max-h-64 overflow-y-auto hide-scrollbar space-y-2 text-xs">
-        </div>
+        <div id="schedule-detail-content" class="p-4 max-h-64 overflow-y-auto hide-scrollbar space-y-2 text-xs"></div>
       </div>
     </div>
   </main>
+  
   <footer class="w-full max-w-sm mx-auto mt-2.5 text-center shrink-0">
     <a href="https://github.com/ginnoon/school-app" target="_blank" rel="noopener noreferrer"
       class="inline-flex items-center justify-center gap-1.5 text-[11px] leading-none text-gray-400 hover:text-gray-600 transition-colors py-1">
       <svg class="w-3.5 h-3.5 shrink-0 block" viewBox="0 0 98 96" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0_730_27126)">
-          <path
-            d="M41.4395 69.3848C28.8066 67.8535 19.9062 58.7617 19.9062 46.9902C19.9062 42.2051 21.6289 37.0371 24.5 33.5918C23.2559 30.4336 23.4473 23.7344 24.8828 20.959C28.7109 20.4805 33.8789 22.4902 36.9414 25.2656C40.5781 24.1172 44.4062 23.543 49.0957 23.543C53.7852 23.543 57.6133 24.1172 61.0586 25.1699C64.0254 22.4902 69.2891 20.4805 73.1172 20.959C74.457 23.543 74.6484 30.2422 73.4043 33.4961C76.4668 37.1328 78.0937 42.0137 78.0937 46.9902C78.0937 58.7617 69.1934 67.6621 56.3691 69.2891C59.623 71.3945 61.8242 75.9883 61.8242 81.252L61.8242 91.2051C61.8242 94.0762 64.2168 95.7031 67.0879 94.5547C84.4102 87.9512 98 70.6289 98 49.1914C98 22.1074 75.9883 6.69539e-07 48.9043 4.309e-07C21.8203 1.92261e-07 -1.9479e-07 22.1074 -4.3343e-07 49.1914C-6.20631e-07 70.4375 13.4941 88.0469 31.6777 94.6504C34.2617 95.6074 36.75 93.8848 36.75 91.3008L36.75 83.6445C35.4102 84.2188 33.6875 84.6016 32.1562 84.6016C25.8398 84.6016 22.1074 81.1563 19.4277 74.7441C18.375 72.1602 17.2266 70.6289 15.0254 70.3418C13.877 70.2461 13.4941 69.7676 13.4941 69.1934C13.4941 68.0449 15.4082 67.1836 17.3223 67.1836C20.0977 67.1836 22.4902 68.9063 24.9785 72.4473C26.8926 75.2227 28.9023 76.4668 31.2949 76.4668C33.6875 76.4668 35.2187 75.6055 37.4199 73.4043C39.0469 71.7773 40.291 70.3418 41.4395 69.3848Z"
-            fill="currentColor" />
+          <path d="M41.4395 69.3848C28.8066 67.8535 19.9062 58.7617 19.9062 46.9902C19.9062 42.2051 21.6289 37.0371 24.5 33.5918C23.2559 30.4336 23.4473 23.7344 24.8828 20.959C28.7109 20.4805 33.8789 22.4902 36.9414 25.2656C40.5781 24.1172 44.4062 23.543 49.0957 23.543C53.7852 23.543 57.6133 24.1172 61.0586 25.1699C64.0254 22.4902 69.2891 20.4805 73.1172 20.959C74.457 23.543 74.6484 30.2422 73.4043 33.4961C76.4668 37.1328 78.0937 42.0137 78.0937 46.9902C78.0937 58.7617 69.1934 67.6621 56.3691 69.2891C59.623 71.3945 61.8242 75.9883 61.8242 81.252L61.8242 91.2051C61.8242 94.0762 64.2168 95.7031 67.0879 94.5547C84.4102 87.9512 98 70.6289 98 49.1914C98 22.1074 75.9883 6.69539e-07 48.9043 4.309e-07C21.8203 1.92261e-07 -1.9479e-07 22.1074 -4.3343e-07 49.1914C-6.20631e-07 70.4375 13.4941 88.0469 31.6777 94.6504C34.2617 95.6074 36.75 93.8848 36.75 91.3008L36.75 83.6445C35.4102 84.2188 33.6875 84.6016 32.1562 84.6016C25.8398 84.6016 22.1074 81.1563 19.4277 74.7441C18.375 72.1602 17.2266 70.6289 15.0254 70.3418C13.877 70.2461 13.4941 69.7676 13.4941 69.1934C13.4941 68.0449 15.4082 67.1836 17.3223 67.1836C20.0977 67.1836 22.4902 68.9063 24.9785 72.4473C26.8926 75.2227 28.9023 76.4668 31.2949 76.4668C33.6875 76.4668 35.2187 75.6055 37.4199 73.4043C39.0469 71.7773 40.291 70.3418 41.4395 69.3848Z" fill="currentColor" />
         </g>
-        <defs>
-          <clipPath id="clip0_730_27126">
-            <rect width="98" height="96" fill="white" />
-          </clipPath>
-        </defs>
+        <defs><clipPath id="clip0_730_27126"><rect width="98" height="96" fill="white" /></clipPath></defs>
       </svg>
       <span class="inline-block translate-y-[1px]">Made by ginnoon</span>
     </a>
   </footer>
-  <div id="toast"
-    class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform opacity-0 translate-y-4 pointer-events-none">
-    <div id="toast-card"
-      class="px-4 py-2.5 rounded-lg shadow-lg text-xs font-medium bg-gray-800 text-white flex items-center gap-2 max-w-xs text-center">
+  
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform opacity-0 translate-y-4 pointer-events-none">
+    <div id="toast-card" class="px-4 py-2.5 rounded-lg shadow-lg text-xs font-medium bg-gray-800 text-white flex items-center gap-2 max-w-xs text-center">
       <span id="toast-msg"></span>
     </div>
   </div>
+
   <script>
     const CONFIG = {
       NEIS_URL: 'https://open.neis.go.kr/hub/mealServiceDietInfo',
@@ -390,18 +285,31 @@
         { name: '제주', lat: 33.4996, lon: 126.5312 }
       ]
     };
+
     const CLEAN_REGEX = /\s*\(.*?\)\s*|[0-9.]+\s*$/g;
+
     const State = {
       currentDate: new Date(),
       scheduleMonth: new Date(),
       cachedMeals: new Map(),
       cachedSchedules: new Map(),
       abortController: null,
-      currentLocIndex: parseInt(localStorage.getItem('weatherLocIndex')) || 0,
+      currentLocIndex: parseInt(localStorage.getItem('weatherLocIndex'), 10) || 0,
       weatherData: null,
       school: JSON.parse(localStorage.getItem('mySchool')) || null
     };
+
     const DOM = {};
+
+    // LRU 캐시 유틸리티 (메모리 누수 방지)
+    const CacheManager = {
+      set(map, key, value, limit = 20) {
+        if (map.has(key)) map.delete(key);
+        else if (map.size >= limit) map.delete(map.keys().next().value);
+        map.set(key, value);
+      }
+    };
+
     const UIService = {
       initDOM() {
         ['view-menu', 'view-meal', 'view-timetable', 'view-schedule', 'view-weather', 'm', 'n', 'm-cal', 'n-cal', 'date-display', 'toast', 'toast-card', 'toast-msg', 'menu-today-precip', 'menu-today-label', 'weather-location', 'weather-list', 'menu-school-name', 'menu-school-region', 'modal-school', 'school-search-input', 'school-search-results', 'meal-header-title', 'schedule-header-title', 'schedule-month-display', 'schedule-list', 'modal-schedule-detail', 'schedule-detail-card', 'schedule-detail-date', 'schedule-detail-content'].forEach(id => {
@@ -411,9 +319,7 @@
       },
       showToast(message, type = 'info') {
         DOM.toastMsg.textContent = message;
-        const typeClasses = {
-          success: 'bg-emerald-700', error: 'bg-rose-700', warning: 'bg-amber-700', info: 'bg-gray-800'
-        };
+        const typeClasses = { success: 'bg-emerald-700', error: 'bg-rose-700', warning: 'bg-amber-700', info: 'bg-gray-800' };
         DOM.toastCard.className = `px-4 py-2.5 rounded-lg shadow-lg text-xs font-medium text-white flex items-center gap-2 max-w-xs text-center ${typeClasses[type] || typeClasses.info}`;
         DOM.toast.classList.replace('opacity-0', 'opacity-100');
         DOM.toast.classList.replace('translate-y-4', 'translate-y-0');
@@ -432,13 +338,12 @@
         });
         const targetView = 'view' + viewName.charAt(0).toUpperCase() + viewName.slice(1);
         if (DOM[targetView]) {
-          if (!isPopState) {
-            history.pushState({ page: viewName }, '', `#${viewName}`);
-          }
+          if (!isPopState) history.pushState({ page: viewName }, '', `#${viewName}`);
           DOM[targetView].classList.replace(targetView === 'viewMenu' ? '-translate-x-full' : 'translate-x-full', 'translate-x-0');
         }
       }
     };
+
     const SchoolService = {
       toggleModal(show) {
         DOM.modalSchool.classList.toggle('translate-y-full', !show);
@@ -457,7 +362,7 @@
             DOM.schoolSearchResults.innerHTML = '<p class="text-xs text-gray-400 text-center py-10">검색 결과가 없습니다.</p>';
             return;
           }
-          DOM.schoolSearchResults.innerHTML = rows.map(r => {
+          const htmlBuffer = rows.map(r => {
             const schulNm = r.SCHUL_NM.replace(/'/g, "\\'");
             const region = (r.ORG_RDNMA || r.LCTN_SC_NM || r.ATPT_OFCDC_SC_NM || '').replace(/'/g, "\\'");
             return `
@@ -467,7 +372,8 @@
                 <div class="text-[10px] text-gray-500 mt-0.5">${r.ORG_RDNMA || r.LCTN_SC_NM || r.ATPT_OFCDC_SC_NM}</div>
               </button>
             `;
-          }).join('');
+          });
+          DOM.schoolSearchResults.innerHTML = htmlBuffer.join('');
         } catch (e) {
           DOM.schoolSearchResults.innerHTML = '<p class="text-xs text-rose-500 text-center py-10">학교 정보를 불러오지 못했습니다.</p>';
         }
@@ -491,6 +397,7 @@
         if (DOM.scheduleHeaderTitle) DOM.scheduleHeaderTitle.textContent = `${State.school.schulNm} 학사일정`;
       }
     };
+
     const MealService = {
       formatDateStr: (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`,
       renderDate() {
@@ -512,38 +419,54 @@
         const targetDate = this.formatDateStr(dateObj);
         DOM.m.innerHTML = DOM.n.innerHTML = CONFIG.SKELETON_HTML;
         DOM.mCal.textContent = DOM.nCal.textContent = '- Kcal';
+        
         if (!State.school) {
-          const errHtml = '<span class="text-xs text-rose-500 font-medium">학교가 설정되지 않았습니다.</span>';
-          DOM.m.innerHTML = DOM.n.innerHTML = errHtml;
+          DOM.m.innerHTML = DOM.n.innerHTML = '<span class="text-xs text-rose-500 font-medium">학교가 설정되지 않았습니다.</span>';
+          return;
         }
+
         if (State.cachedMeals.has(targetDate)) return this.displayMeal(State.cachedMeals.get(targetDate));
+        
         if (State.abortController) State.abortController.abort();
         State.abortController = new AbortController();
-        const fromDate = this.formatDateStr(new Date(dateObj.getTime() - 86400000));
-        const toDate = this.formatDateStr(new Date(dateObj.getTime() + 86400000));
+        
+        const ts = dateObj.getTime();
+        const fromDate = this.formatDateStr(new Date(ts - 86400000));
+        const toDate = this.formatDateStr(new Date(ts + 86400000));
         const url = `${CONFIG.NEIS_URL}?ATPT_OFCDC_SC_CODE=${State.school.atptCode}&SD_SCHUL_CODE=${State.school.schulCode}&MLSV_FROM_YMD=${fromDate}&MLSV_TO_YMD=${toDate}&pSize=100&Type=json`;
+        
         try {
           const res = await fetch(url, { signal: State.abortController.signal });
           const json = await res.json();
           const defaultEmpty = () => ({ m: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT }, n: { menu: CONFIG.NO_MEAL_TEXT, cal: CONFIG.NO_CAL_TEXT } });
-          [fromDate, targetDate, toDate].forEach(d => { if (!State.cachedMeals.has(d)) State.cachedMeals.set(d, defaultEmpty()); });
-          json.mealServiceDietInfo?.[1]?.row?.forEach(row => {
-            const dataObj = State.cachedMeals.get(row.MLSV_YMD);
-            if (!dataObj) return;
-            const menu = row.DDISH_NM.split('<br/>').map(l => l.replace(CLEAN_REGEX, '').trim()).filter(Boolean).join('<br>') || CONFIG.NO_MEAL_TEXT;
-            const cal = row.CAL_INFO.trim() || CONFIG.NO_CAL_TEXT;
-            if (['2', '중식'].some(k => row.MMEAL_SC_CODE === k || row.MMEAL_SC_NM.includes(k))) { dataObj.m = { menu, cal }; }
-            if (['3', '석식'].some(k => row.MMEAL_SC_CODE === k || row.MMEAL_SC_NM.includes(k))) { dataObj.n = { menu, cal }; }
+          
+          [fromDate, targetDate, toDate].forEach(d => {
+            if (!State.cachedMeals.has(d)) CacheManager.set(State.cachedMeals, d, defaultEmpty());
           });
+
+          const rows = json.mealServiceDietInfo?.[1]?.row;
+          if (rows) {
+            for (let i = 0, len = rows.length; i < len; i++) {
+              const row = rows[i];
+              const dataObj = State.cachedMeals.get(row.MLSV_YMD);
+              if (!dataObj) continue;
+              
+              const menu = row.DDISH_NM.split('<br/>').map(l => l.replace(CLEAN_REGEX, '').trim()).filter(Boolean).join('<br>') || CONFIG.NO_MEAL_TEXT;
+              const cal = row.CAL_INFO.trim() || CONFIG.NO_CAL_TEXT;
+              
+              if (row.MMEAL_SC_CODE === '2' || row.MMEAL_SC_NM.includes('중식')) dataObj.m = { menu, cal };
+              if (row.MMEAL_SC_CODE === '3' || row.MMEAL_SC_NM.includes('석식')) dataObj.n = { menu, cal };
+            }
+          }
           this.displayMeal(State.cachedMeals.get(targetDate));
         } catch (e) {
           if (e.name !== 'AbortError') {
-            const errHtml = '<span class="text-xs text-rose-500 font-medium">데이터를 불러오지 못했습니다.</span>';
-            DOM.m.innerHTML = DOM.n.innerHTML = errHtml;
+            DOM.m.innerHTML = DOM.n.innerHTML = '<span class="text-xs text-rose-500 font-medium">데이터를 불러오지 못했습니다.</span>';
           }
         }
       }
     };
+
     const ScheduleService = {
       formatMonthStr: (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`,
       renderMonth() {
@@ -564,77 +487,78 @@
         const firstDay = new Date(year, month, 1).getDay();
         const lastDate = new Date(year, month + 1, 0).getDate();
 
-        // 날짜별로 일정 그룹화
-        const byDate = {};
-        (schedules || []).forEach(item => {
+        // 날짜별 데이터 인덱싱 (O(1) 접근 및 휴일 캐싱)
+        const byDate = Array.from({ length: 32 }, () => []);
+        const isHolidayCache = new Uint8Array(32);
+
+        for (let i = 0, len = schedules.length; i < len; i++) {
+          const item = schedules[i];
           const d = parseInt(item.AA_YMD.slice(6, 8), 10);
-          if (!byDate[d]) byDate[d] = [];
           byDate[d].push(item);
-        });
+          if (item.SBTR_DD_SC_NM === '휴업일' || item.SBTR_DD_SC_NM === '공휴일') {
+            isHolidayCache[d] = 1;
+          }
+        }
 
         const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
-        let html = '<div class="grid grid-cols-7 gap-px bg-gray-200">';
+        const htmlBuffer = [];
+        htmlBuffer.push('<div class="grid grid-cols-7 gap-px bg-gray-200">');
 
         // 요일 헤더
         dayNames.forEach((d, i) => {
           const color = i === 0 ? 'text-rose-500' : i === 6 ? 'text-blue-500' : 'text-gray-700';
-          html += `<div class="bg-gray-100 text-center py-1.5 text-[10px] font-bold ${color}">${d}</div>`;
+          htmlBuffer.push(`<div class="bg-gray-100 text-center py-1.5 text-[10px] font-bold ${color}">${d}</div>`);
         });
 
         // 1일 이전 빈 칸
         for (let i = 0; i < firstDay; i++) {
-          html += '<div class="bg-gray-50 min-h-[65px]"></div>';
+          htmlBuffer.push('<div class="bg-gray-50 min-h-[65px]"></div>');
         }
 
         const today = new Date();
         const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
-
-        // 쉬는 날(휴일) 여부를 판별하는 헬퍼 함수
-        const checkHoliday = (evt) => evt.SBTR_DD_SC_NM === '휴업일' || evt.SBTR_DD_SC_NM === '공휴일';
+        const todayDate = today.getDate();
 
         // 날짜 칸 생성
         for (let i = 1; i <= lastDate; i++) {
           const dayOfWeek = (firstDay + i - 1) % 7;
-
-          let isHoliday = false;
-          if (byDate[i]) isHoliday = byDate[i].some(checkHoliday);
+          const isHoliday = isHolidayCache[i] === 1;
 
           const color = dayOfWeek === 0 || isHoliday ? 'text-rose-500' : dayOfWeek === 6 ? 'text-blue-500' : 'text-gray-800';
-          const isToday = isCurrentMonth && today.getDate() === i;
+          const isToday = isCurrentMonth && todayDate === i;
           const bg = isToday ? 'bg-blue-50/40 hover:bg-blue-100/60' : 'bg-white hover:bg-blue-50/50';
 
           const todayBadgeColor = dayOfWeek === 0 || isHoliday ? 'bg-rose-500' : 'bg-blue-500';
           const badge = isToday ? `<span class="${todayBadgeColor} text-white rounded-full w-4 h-4 inline-flex items-center justify-center font-bold shadow-sm">${i}</span>` : i;
 
-          html += `<div onclick="ScheduleService.openDetailModal(${year}, ${month + 1}, ${i})" class="${bg} min-h-[65px] p-0.5 flex flex-col cursor-pointer transition-colors group">
+          htmlBuffer.push(`<div onclick="ScheduleService.openDetailModal(${year}, ${month + 1}, ${i})" class="${bg} min-h-[65px] p-0.5 flex flex-col cursor-pointer transition-colors group">
             <span class="text-[10px] ${isToday ? '' : 'font-medium'} ${color} text-center block mb-0.5 group-hover:scale-110 transition-transform">${badge}</span>
-            <div class="flex-1 flex flex-col gap-[1px] overflow-hidden">`;
+            <div class="flex-1 flex flex-col gap-[1px] overflow-hidden">`);
 
-          if (byDate[i]) {
-            byDate[i].forEach(evt => {
-              const isEvtHoliday = checkHoliday(evt);
-              const evtBg = isEvtHoliday ? 'bg-rose-50' : 'bg-blue-50';
-              const evtText = isEvtHoliday ? 'text-rose-700' : 'text-blue-700';
-              const evtBorder = isEvtHoliday ? 'border-rose-100/50' : 'border-blue-100/50';
+          const dayEvents = byDate[i];
+          for (let j = 0, evLen = dayEvents.length; j < evLen; j++) {
+            const evt = dayEvents[j];
+            const isEvtHoliday = evt.SBTR_DD_SC_NM === '휴업일' || evt.SBTR_DD_SC_NM === '공휴일';
+            const evtBg = isEvtHoliday ? 'bg-rose-50' : 'bg-blue-50';
+            const evtText = isEvtHoliday ? 'text-rose-700' : 'text-blue-700';
+            const evtBorder = isEvtHoliday ? 'border-rose-100/50' : 'border-blue-100/50';
 
-              html += `<div class="text-[9px] leading-tight ${evtBg} ${evtText} rounded-sm px-1 py-0.5 truncate border ${evtBorder}" title="${evt.EVENT_NM}">${evt.EVENT_NM}</div>`;
-            });
+            htmlBuffer.push(`<div class="text-[9px] leading-tight ${evtBg} ${evtText} rounded-sm px-1 py-0.5 truncate border ${evtBorder}" title="${evt.EVENT_NM}">${evt.EVENT_NM}</div>`);
           }
-          html += `</div></div>`;
+          htmlBuffer.push(`</div></div>`);
         }
 
         // 마지막 날짜 이후 빈 칸
         const totalCells = firstDay + lastDate;
         const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
         for (let i = 0; i < remainingCells; i++) {
-          html += '<div class="bg-gray-50 min-h-[65px]"></div>';
+          htmlBuffer.push('<div class="bg-gray-50 min-h-[65px]"></div>');
         }
 
-        html += '</div>';
-        DOM.scheduleList.innerHTML = html;
+        htmlBuffer.push('</div>');
+        DOM.scheduleList.innerHTML = htmlBuffer.join('');
       },
       async fetchScheduleData(dateObj) {
-        // 캘린더 모양의 스켈레톤 UI 로딩
         DOM.scheduleList.innerHTML = `
           <div class="grid grid-cols-7 gap-px bg-gray-200 animate-pulse">
             ${Array(7).fill('<div class="bg-gray-100 h-6"></div>').join('')}
@@ -655,7 +579,6 @@
         const fromDate = `${monthStr}01`;
         const lastDay = new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
         const toDate = `${monthStr}${lastDay}`;
-
         const url = `https://ginnoon-api.vercel.app/NEIS/SchoolSchedule?Type=json&pSize=100&ATPT_OFCDC_SC_CODE=${State.school.atptCode}&SD_SCHUL_CODE=${State.school.schulCode}&AA_FROM_YMD=${fromDate}&AA_TO_YMD=${toDate}`;
 
         try {
@@ -667,15 +590,18 @@
 
           const uniqueSchedules = [];
           const seen = new Set();
-          schedules.forEach(item => {
-            const key = `${item.AA_YMD}-${item.EVENT_NM}`;
-            if (!seen.has(key) && item.EVENT_NM !== '토요휴업일') {
+          
+          for (let i = 0, len = schedules.length; i < len; i++) {
+            const item = schedules[i];
+            if (item.EVENT_NM === '토요휴업일') continue;
+            const key = item.AA_YMD + item.EVENT_NM;
+            if (!seen.has(key)) {
               seen.add(key);
               uniqueSchedules.push(item);
             }
-          });
+          }
 
-          State.cachedSchedules.set(monthStr, uniqueSchedules);
+          CacheManager.set(State.cachedSchedules, monthStr, uniqueSchedules, 12); // 최대 1년치 캐시 유지
           this.displaySchedule(uniqueSchedules);
         } catch (e) {
           DOM.scheduleList.innerHTML = '<div class="text-sm text-rose-500 font-medium text-center py-10 bg-white">데이터를 불러오지 못했습니다.</div>';
@@ -690,32 +616,23 @@
         const dayEvents = schedules.filter(item => item.AA_YMD === targetDateYMD);
         const dateObj = new Date(year, month - 1, day);
         const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
-        const dayOfWeekStr = dayNames[dateObj.getDay()];
 
         if (DOM.scheduleDetailDate) {
-          DOM.scheduleDetailDate.textContent = `${year}년 ${month}월 ${day}일 (${dayOfWeekStr})`;
+          DOM.scheduleDetailDate.textContent = `${year}년 ${month}월 ${day}일 (${dayNames[dateObj.getDay()]})`;
         }
 
         if (DOM.scheduleDetailContent) {
           if (dayEvents.length === 0) {
             DOM.scheduleDetailContent.innerHTML = '<div class="text-center py-6 text-gray-400 text-xs">등록된 학사일정이 없습니다.</div>';
           } else {
-            DOM.scheduleDetailContent.innerHTML = dayEvents.map(evt => {
+            const htmlBuffer = dayEvents.map(evt => {
               const targetGrades = [];
-
               if (evt.ONE_GRADE_EVENT_YN === 'Y') targetGrades.push('1학년');
               if (evt.TW_GRADE_EVENT_YN === 'Y') targetGrades.push('2학년');
               if (evt.THREE_GRADE_EVENT_YN === 'Y') targetGrades.push('3학년');
-
-              const gradeText =
-                targetGrades.length > 0
-                  ? targetGrades.join(', ')
-                  : '전학년';
-
-              const isHoliday =
-                evt.SBTR_DD_SC_NM === '휴업일' ||
-                evt.SBTR_DD_SC_NM === '공휴일';
-
+              
+              const gradeText = targetGrades.length > 0 ? targetGrades.join(', ') : '전학년';
+              const isHoliday = evt.SBTR_DD_SC_NM === '휴업일' || evt.SBTR_DD_SC_NM === '공휴일';
               const cardBg = isHoliday ? 'bg-rose-50/70' : 'bg-blue-50/70';
               const cardBorder = isHoliday ? 'border-rose-100' : 'border-blue-100';
               const titleColor = isHoliday ? 'text-rose-900' : 'text-blue-900';
@@ -725,32 +642,16 @@
 
               return `
                 <div class="p-3 rounded-lg ${cardBg} border ${cardBorder} flex flex-col gap-1 text-left">
-                <div class="font-bold text-xs ${titleColor}">
-                ${evt.EVENT_NM}
+                  <div class="font-bold text-xs ${titleColor}">${evt.EVENT_NM}</div>
+                  <div class="flex items-center justify-between text-[10px] ${textColor} mt-1">
+                    <span class="bg-white px-1.5 py-0.5 rounded border ${cardBorder} font-medium">대상: ${gradeText}</span>
+                    ${evt.SBTR_DD_SC_NM ? `<span class="${badgeBg} ${badgeText} px-1.5 py-0.5 rounded font-medium">${evt.SBTR_DD_SC_NM}</span>` : ''}
+                  </div>
+                  ${evt.EVENT_CNTNT ? `<p class="text-[11px] text-gray-600 mt-1 leading-relaxed">${evt.EVENT_CNTNT}</p>` : ''}
                 </div>
-
-                <div class="flex items-center justify-between text-[10px] ${textColor} mt-1">
-                <span class="bg-white px-1.5 py-0.5 rounded border ${cardBorder} font-medium">
-                대상: ${gradeText}
-                </span>
-
-                ${evt.SBTR_DD_SC_NM
-                ? `<span class="${badgeBg} ${badgeText} px-1.5 py-0.5 rounded font-medium">
-                ${evt.SBTR_DD_SC_NM}
-                </span>`
-                : ''
-                }
-                </div>
-
-                ${evt.EVENT_CNTNT
-                ? `<p class="text-[11px] text-gray-600 mt-1 leading-relaxed">
-                ${evt.EVENT_CNTNT}
-                </p>`
-                : ''
-                }
-                </div>
-                `;
-            }).join('');
+              `;
+            });
+            DOM.scheduleDetailContent.innerHTML = htmlBuffer.join('');
           }
         }
 
@@ -770,6 +671,7 @@
         }
       }
     };
+
     const TimetableService = {
       init() {
         const html = localStorage.getItem('myTimetable');
@@ -779,7 +681,8 @@
         try {
           if (!navigator.clipboard?.read) throw new Error('Not supported');
           const items = await navigator.clipboard.read();
-          for (const item of items) {
+          for (let i = 0, len = items.length; i < len; i++) {
+            const item = items[i];
             if (item.types.includes('text/html')) {
               this.processPastedHTML(await (await item.getType('text/html')).text());
               return;
@@ -795,11 +698,18 @@
         if (!table) return UIService.showToast("표 구조를 찾지 못했습니다.", "warning");
         const rows = Array.from(table.querySelectorAll("tr")).filter(tr => tr.querySelector("th, td"));
         if (!rows.length) return;
+        
         const startIndex = rows[0].querySelector("th") ? 1 : 0;
         const tbody = document.createElement("tbody");
-        rows.slice(startIndex).forEach(row => {
+        
+        const rowSlice = rows.slice(startIndex);
+        for (let i = 0, rLen = rowSlice.length; i < rLen; i++) {
+          const row = rowSlice[i];
           const newRow = document.createElement("tr");
-          Array.from(row.querySelectorAll("th, td")).slice(0, 6).forEach((cell, j) => {
+          const cells = Array.from(row.querySelectorAll("th, td")).slice(0, 6);
+          
+          for (let j = 0, cLen = cells.length; j < cLen; j++) {
+            const cell = cells[j];
             const isHead = j === 0;
             const newCell = document.createElement(isHead ? "th" : "td");
             newCell.className = isHead
@@ -808,17 +718,20 @@
             if (isHead) newCell.setAttribute("scope", "row");
             this.copyCellContent(cell, newCell);
             newRow.appendChild(newCell);
-          });
+          }
           tbody.appendChild(newRow);
-        });
+        }
         DOM.timetableBody.innerHTML = tbody.innerHTML;
         localStorage.setItem('myTimetable', tbody.innerHTML);
         UIService.showToast("시간표가 등록되었습니다.", "success");
       },
       copyCellContent(source, target) {
-        Array.from(source.childNodes).forEach(child => {
-          if (child.nodeType === Node.TEXT_NODE) target.appendChild(document.createTextNode(child.nodeValue));
-          else if (child.nodeType === Node.ELEMENT_NODE) {
+        const childNodes = Array.from(source.childNodes);
+        for (let i = 0, len = childNodes.length; i < len; i++) {
+          const child = childNodes[i];
+          if (child.nodeType === Node.TEXT_NODE) {
+            target.appendChild(document.createTextNode(child.nodeValue));
+          } else if (child.nodeType === Node.ELEMENT_NODE) {
             const tag = child.tagName.toLowerCase();
             if (new Set(["br", "span", "b", "strong", "i", "em"]).has(tag)) {
               const newEl = document.createElement(tag);
@@ -828,20 +741,23 @@
               Array.from(child.childNodes).forEach(n => target.appendChild(n.cloneNode(true)));
             }
           }
-        });
+        }
         this.cleanElement(target, true);
       },
       cleanElement(element, isRoot = false) {
         if (!isRoot) {
-          const attrs = element.attributes;
-          for (let i = attrs.length - 1; i >= 0; i--) {
-            element.removeAttribute(attrs[i].name);
+          while (element.attributes.length > 0) {
+            element.removeAttribute(element.attributes[0].name);
           }
-          if (element.tagName.toLowerCase() === 'span') element.className = 'tch';
+          if (element.tagName === 'SPAN') element.className = 'tch';
         }
-        Array.from(element.children).forEach(c => this.cleanElement(c, false));
+        const children = element.children;
+        for (let i = 0, len = children.length; i < len; i++) {
+          this.cleanElement(children[i], false);
+        }
       }
     };
+
     const WeatherService = {
       init() {
         CONFIG.LOCATIONS.forEach((loc, i) => DOM.weatherLocation.add(new Option(loc.name, i)));
@@ -853,6 +769,7 @@
         DOM.menuTodayPrecip.textContent = '...';
         if (DOM.menuTodayLabel) DOM.menuTodayLabel.textContent = '오늘';
         DOM.weatherList.innerHTML = '<div class="text-center text-sm text-gray-500 py-10 animate-pulse">로딩 중...</div>';
+        
         try {
           const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=precipitation_probability&daily=precipitation_probability_max,weather_code&timezone=Asia%2FSeoul`);
           State.weatherData = await res.json();
@@ -866,49 +783,66 @@
       updateUI() {
         const { daily, hourly } = State.weatherData || {};
         if (!daily) return;
+        
         const now = new Date();
-        const currentHourStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:00`;
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        const hh = String(now.getHours()).padStart(2, '0');
+        
+        const todayPrefix = `${yyyy}-${mm}-${dd}`;
+        const currentHourStr = `${todayPrefix}T${hh}:00`;
         let todayPrecip = daily.precipitation_probability_max[0];
+        
+        // 단일 루프로 오늘 남은 시간대 강수확률 최대값 계산 (메모리 할당 및 복사 방지)
         if (hourly?.time) {
-          const remaining = hourly.precipitation_probability.filter((p, i) => hourly.time[i] >= currentHourStr && hourly.time[i].startsWith(currentHourStr.split('T')[0]));
-          if (remaining.length) todayPrecip = Math.max(...remaining);
+          let maxPrecip = -1;
+          const endOfDayStr = `${todayPrefix}T23:59`;
+          for (let i = 0, len = hourly.time.length; i < len; i++) {
+            const timeStr = hourly.time[i];
+            if (timeStr >= currentHourStr && timeStr <= endOfDayStr) {
+              if (hourly.precipitation_probability[i] > maxPrecip) {
+                maxPrecip = hourly.precipitation_probability[i];
+              }
+            } else if (timeStr > endOfDayStr) {
+              break;
+            }
+          }
+          if (maxPrecip !== -1) todayPrecip = maxPrecip;
         }
+        
         DOM.menuTodayPrecip.textContent = `${todayPrecip}%`;
         const days = ['일', '월', '화', '수', '목', '금', '토'];
+        
         const WMO_GOOGLE_ICON = {
           0: 'sunny', 1: 'mostly_sunny', 2: 'partly_cloudy', 3: 'cloudy',
-          45: 'cloudy', 48: 'cloudy',
-          51: 'drizzle', 53: 'drizzle', 55: 'drizzle',
-          56: 'wintry_mix', 57: 'wintry_mix',
-          61: 'scattered_showers', 63: 'showers', 65: 'heavy',
-          66: 'wintry_mix', 67: 'wintry_mix',
-          71: 'flurries', 73: 'scattered_snow', 75: 'heavy_snow', 77: 'flurries',
-          80: 'scattered_showers', 81: 'showers', 82: 'heavy',
-          85: 'snow_showers', 86: 'heavy_snow',
+          45: 'cloudy', 48: 'cloudy', 51: 'drizzle', 53: 'drizzle', 55: 'drizzle',
+          56: 'wintry_mix', 57: 'wintry_mix', 61: 'scattered_showers', 63: 'showers', 65: 'heavy',
+          66: 'wintry_mix', 67: 'wintry_mix', 71: 'flurries', 73: 'scattered_snow', 75: 'heavy_snow', 77: 'flurries',
+          80: 'scattered_showers', 81: 'showers', 82: 'heavy', 85: 'snow_showers', 86: 'heavy_snow',
           95: 'isolated_tstorms', 96: 'strong_tstorms', 99: 'strong_tstorms'
         };
-        const getIconUrl = (code) => {
-          const condition = WMO_GOOGLE_ICON[code] || 'cloudy';
-          return `https://maps.gstatic.com/weather/v1/${condition}.svg`;
-        };
+        const getIconUrl = (code) => `https://maps.gstatic.com/weather/v1/${WMO_GOOGLE_ICON[code] || 'cloudy'}.svg`;
+        
         if (DOM.menuTodayLabel) {
           const todayIconUrl = getIconUrl(daily.weather_code[0]);
           DOM.menuTodayLabel.innerHTML = `오늘 <img src="${todayIconUrl}" class="inline-block w-4 h-4 ml-1 align-middle drop-shadow-[0_1px_2px_rgba(102,115,139,.75)]" alt="오늘 날씨">`;
         }
-        DOM.weatherList.innerHTML = daily.time.map((dStr, i) => {
+        
+        const htmlBuffer = daily.time.map((dStr, i) => {
           const d = new Date(dStr + 'T00:00:00');
           const isToday = i === 0;
           const p = isToday ? todayPrecip : daily.precipitation_probability_max[i];
           const color = p > 50 ? 'bg-blue-500' : p > 0 ? 'bg-blue-300' : 'bg-blue-100';
           const text = p > 50 ? 'text-blue-600' : 'text-gray-700';
-          const iconUrl = getIconUrl(daily.weather_code[i]);
+          
           return `
             <div class="flex items-center gap-4 bg-white border border-gray-100 rounded-lg p-3 shadow-sm">
               <div class="w-[4.5rem] shrink-0 text-center">
                 <div class="text-[11px] text-gray-500 font-medium">${d.getMonth() + 1}.${d.getDate()}</div>
                 <div class="text-sm font-bold flex justify-center items-center gap-2 ${isToday ? 'text-blue-600' : 'text-gray-800'} whitespace-nowrap">
                   <span>${isToday ? '오늘' : days[d.getDay()]}</span>
-                  <img src="${iconUrl}" class="w-6 h-6 object-contain drop-shadow-[0_2px_2px_rgba(102,115,139,.75)]" alt="날씨 아이콘">
+                  <img src="${getIconUrl(daily.weather_code[i])}" class="w-6 h-6 object-contain drop-shadow-[0_2px_2px_rgba(102,115,139,.75)]" alt="날씨 아이콘">
                 </div>
               </div>
               <div class="flex-1">
@@ -919,7 +853,8 @@
               <div class="w-12 shrink-0 text-right"><span class="text-base font-bold ${text}">${p}%</span></div>
             </div>
           `;
-        }).join('');
+        });
+        DOM.weatherList.innerHTML = htmlBuffer.join('');
       },
       changeLocation() {
         State.currentLocIndex = DOM.weatherLocation.value;
@@ -927,6 +862,7 @@
         this.fetchWeatherData();
       }
     };
+
     function initRouter() {
       const hash = location.hash.replace('#', '');
       const validViews = ['menu', 'meal', 'timetable', 'schedule', 'weather'];
@@ -938,19 +874,15 @@
         UIService.navigate('menu', true);
       }
     }
+
     window.addEventListener('popstate', (event) => {
-      const targetPage = (event.state && event.state.page) ? event.state.page : 'menu';
-      UIService.navigate(targetPage, true);
+      UIService.navigate((event.state && event.state.page) ? event.state.page : 'menu', true);
     });
-    window.addEventListener('offline', () => {
-      UIService.showToast('인터넷에 연결되어 있지 않습니다.', 'warning');
-    });
-    if (!navigator.onLine) {
-      UIService.showToast('인터넷에 연결되어 있지 않습니다.', 'warning');
-    }
-    if (!history.state) {
-      history.replaceState({ page: 'menu' }, '', '#menu');
-    }
+    
+    window.addEventListener('offline', () => UIService.showToast('인터넷에 연결되어 있지 않습니다.', 'warning'));
+    if (!navigator.onLine) UIService.showToast('인터넷에 연결되어 있지 않습니다.', 'warning');
+    if (!history.state) history.replaceState({ page: 'menu' }, '', '#menu');
+
     window.onload = () => {
       UIService.initDOM();
       initRouter();
@@ -969,5 +901,4 @@
     }
   </script>
 </body>
-
 </html>
