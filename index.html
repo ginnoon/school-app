@@ -263,8 +263,7 @@
     </section>
     <section id="view-schedule"
       class="flex flex-col h-full absolute inset-0 bg-white transition-transform duration-300 transform translate-x-full overflow-y-auto hide-scrollbar z-20">
-      <header
-        class="p-4 border-b border-gray-200 bg-white flex items-center gap-3 sticky top-0 z-30 shrink-0">
+      <header class="p-4 border-b border-gray-200 bg-white flex items-center gap-3 sticky top-0 z-30 shrink-0">
         <button onclick="UIService.navigate('menu')"
           class="w-8 h-8 rounded-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors">
           &lt;
@@ -596,28 +595,28 @@
         // 날짜 칸 생성
         for (let i = 1; i <= lastDate; i++) {
           const dayOfWeek = (firstDay + i - 1) % 7;
-          
+
           let isHoliday = false;
           if (byDate[i]) isHoliday = byDate[i].some(checkHoliday);
 
           const color = dayOfWeek === 0 || isHoliday ? 'text-rose-500' : dayOfWeek === 6 ? 'text-blue-500' : 'text-gray-800';
           const isToday = isCurrentMonth && today.getDate() === i;
           const bg = isToday ? 'bg-blue-50/40 hover:bg-blue-100/60' : 'bg-white hover:bg-blue-50/50';
-          
+
           const todayBadgeColor = dayOfWeek === 0 || isHoliday ? 'bg-rose-500' : 'bg-blue-500';
           const badge = isToday ? `<span class="${todayBadgeColor} text-white rounded-full w-4 h-4 inline-flex items-center justify-center font-bold shadow-sm">${i}</span>` : i;
 
           html += `<div onclick="ScheduleService.openDetailModal(${year}, ${month + 1}, ${i})" class="${bg} min-h-[65px] p-0.5 flex flex-col cursor-pointer transition-colors group">
             <span class="text-[10px] ${isToday ? '' : 'font-medium'} ${color} text-center block mb-0.5 group-hover:scale-110 transition-transform">${badge}</span>
             <div class="flex-1 flex flex-col gap-[1px] overflow-hidden">`;
-          
+
           if (byDate[i]) {
             byDate[i].forEach(evt => {
               const isEvtHoliday = checkHoliday(evt);
               const evtBg = isEvtHoliday ? 'bg-rose-50' : 'bg-blue-50';
               const evtText = isEvtHoliday ? 'text-rose-700' : 'text-blue-700';
               const evtBorder = isEvtHoliday ? 'border-rose-100/50' : 'border-blue-100/50';
-              
+
               html += `<div class="text-[9px] leading-tight ${evtBg} ${evtText} rounded-sm px-1 py-0.5 truncate border ${evtBorder}" title="${evt.EVENT_NM}">${evt.EVENT_NM}</div>`;
             });
           }
@@ -642,12 +641,12 @@
             ${Array(35).fill('<div class="bg-white min-h-[65px] p-1"><div class="w-3 h-3 bg-gray-200 rounded mx-auto mb-1"></div><div class="w-full h-3 bg-gray-100 rounded"></div></div>').join('')}
           </div>
         `;
-        
+
         if (!State.school) {
           DOM.scheduleList.innerHTML = '<div class="text-sm text-rose-500 font-medium text-center py-10 bg-white">학교가 설정되지 않았습니다.</div>';
           return;
         }
-        
+
         const monthStr = this.formatMonthStr(dateObj);
         if (State.cachedSchedules.has(monthStr)) {
           return this.displaySchedule(State.cachedSchedules.get(monthStr));
@@ -663,9 +662,9 @@
           const res = await fetch(url);
           const json = await res.json();
           const schedules = json.SchoolSchedule?.[1]?.row || [];
-          
+
           schedules.sort((a, b) => a.AA_YMD.localeCompare(b.AA_YMD));
-          
+
           const uniqueSchedules = [];
           const seen = new Set();
           schedules.forEach(item => {
@@ -687,12 +686,12 @@
         const schedules = State.cachedSchedules.get(monthStr) || [];
         const dayStr = String(day).padStart(2, '0');
         const targetDateYMD = `${monthStr}${dayStr}`;
-        
+
         const dayEvents = schedules.filter(item => item.AA_YMD === targetDateYMD);
         const dateObj = new Date(year, month - 1, day);
         const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
         const dayOfWeekStr = dayNames[dateObj.getDay()];
-        
+
         if (DOM.scheduleDetailDate) {
           DOM.scheduleDetailDate.textContent = `${year}년 ${month}월 ${day}일 (${dayOfWeekStr})`;
         }
@@ -703,21 +702,54 @@
           } else {
             DOM.scheduleDetailContent.innerHTML = dayEvents.map(evt => {
               const targetGrades = [];
+
               if (evt.ONE_GRADE_EVENT_YN === 'Y') targetGrades.push('1학년');
               if (evt.TW_GRADE_EVENT_YN === 'Y') targetGrades.push('2학년');
               if (evt.THREE_GRADE_EVENT_YN === 'Y') targetGrades.push('3학년');
-              const gradeText = targetGrades.length > 0 ? targetGrades.join(', ') : '전학년';
+
+              const gradeText =
+                targetGrades.length > 0
+                  ? targetGrades.join(', ')
+                  : '전학년';
+
+              const isHoliday =
+                evt.SBTR_DD_SC_NM === '휴업일' ||
+                evt.SBTR_DD_SC_NM === '공휴일';
+
+              const cardBg = isHoliday ? 'bg-rose-50/70' : 'bg-blue-50/70';
+              const cardBorder = isHoliday ? 'border-rose-100' : 'border-blue-100';
+              const titleColor = isHoliday ? 'text-rose-900' : 'text-blue-900';
+              const textColor = isHoliday ? 'text-rose-600' : 'text-blue-600';
+              const badgeBg = isHoliday ? 'bg-rose-100' : 'bg-blue-100';
+              const badgeText = isHoliday ? 'text-rose-700' : 'text-blue-700';
 
               return `
-                <div class="p-3 rounded-lg bg-blue-50/70 border border-blue-100 flex flex-col gap-1 text-left">
-                  <div class="font-bold text-xs text-blue-900">${evt.EVENT_NM}</div>
-                  <div class="flex items-center justify-between text-[10px] text-blue-600 mt-1">
-                    <span class="bg-white px-1.5 py-0.5 rounded border border-blue-100 font-medium">대상: ${gradeText}</span>
-                    ${evt.SBTR_DD_SC_NM ? `<span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-medium">${evt.SBTR_DD_SC_NM}</span>` : ''}
-                  </div>
-                  ${evt.EVENT_CNTNT ? `<p class="text-[11px] text-gray-600 mt-1 leading-relaxed">${evt.EVENT_CNTNT}</p>` : ''}
+                <div class="p-3 rounded-lg ${cardBg} border ${cardBorder} flex flex-col gap-1 text-left">
+                <div class="font-bold text-xs ${titleColor}">
+                ${evt.EVENT_NM}
                 </div>
-              `;
+
+                <div class="flex items-center justify-between text-[10px] ${textColor} mt-1">
+                <span class="bg-white px-1.5 py-0.5 rounded border ${cardBorder} font-medium">
+                대상: ${gradeText}
+                </span>
+
+                ${evt.SBTR_DD_SC_NM
+                ? `<span class="${badgeBg} ${badgeText} px-1.5 py-0.5 rounded font-medium">
+                ${evt.SBTR_DD_SC_NM}
+                </span>`
+                : ''
+                }
+                </div>
+
+                ${evt.EVENT_CNTNT
+                ? `<p class="text-[11px] text-gray-600 mt-1 leading-relaxed">
+                ${evt.EVENT_CNTNT}
+                </p>`
+                : ''
+                }
+                </div>
+                `;
             }).join('');
           }
         }
