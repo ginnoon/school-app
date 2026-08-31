@@ -476,6 +476,7 @@
         if (reset) {
           State.scheduleMonth = new Date();
         } else {
+          State.scheduleMonth.setDate(1);
           State.scheduleMonth.setMonth(State.scheduleMonth.getMonth() + offset);
         }
         this.renderMonth();
